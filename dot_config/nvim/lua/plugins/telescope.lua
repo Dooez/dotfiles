@@ -1,0 +1,297 @@
+return {
+    'nvim-telescope/telescope.nvim',
+    --branch = '0.1.x',
+    dependencies = {
+        'nvim-lua/plenary.nvim',
+        -- Fuzzy Finder Algorithm which requires local dependencies to be built.
+        -- Only load if `make` is available. Make sure you have the system
+        -- requirements installed.
+        {
+            'nvim-telescope/telescope-fzf-native.nvim',
+            -- NOTE: If you are having trouble with this installation,
+            --       refer to the README for telescope-fzf-native for more instructions.
+            build = 'make',
+            cond = function() return vim.fn.executable 'make' == 1 end
+        },
+        -- {
+        --     "nvim-telescope/telescope-frecency.nvim",
+        --     config = function()
+        --         require("telescope").load_extension "frecency"
+        --     end,
+        -- },
+        {
+            'MunifTanjim/nui.nvim',
+        }
+    },
+    config = function()
+        local Popup = require("nui.popup")
+        local Layout = require("nui.layout")
+
+        local telescope = require("telescope")
+        local TSLayout = require("telescope.pickers.layout")
+
+        local function make_popup(options)
+            local popup = Popup(options)
+            function popup.border:change_title(title)
+                popup.border.set_text(popup.border, "top", title)
+            end
+
+            return TSLayout.Window(popup)
+        end
+        -- [[ Configure Telescope ]]
+        -- See `:help telescope` and `:help telescope.setup()`
+        require('telescope').setup {
+            defaults = {
+                mappings = { i = { ['<C-u>'] = false, ['<C-d>'] = false } },
+                layout_strategy = "flex",
+                layout_config = {
+                    horizontal = {
+                        size = {
+                            width = "70%",
+                            height = "70%",
+                        },
+                    },
+                    vertical = {
+                        size = {
+                            width = "90%",
+                            height = "90%",
+                        },
+                    },
+                },
+                create_layout = function(picker)
+                    local border = {
+                        results = {
+                            top_left = "┌",
+                            top = "─",
+                            top_right = "┬",
+                            right = "│",
+                            bottom_right = "",
+                            bottom = "",
+                            bottom_left = "",
+                            left = "│",
+                        },
+                        results_patch = {
+                            minimal = {
+                                top_left = "┌",
+                                top_right = "┐",
+                            },
+                            horizontal = {
+                                top_left = "┌",
+                                top_right = "┬",
+                            },
+                            vertical = {
+                                top_left = "├",
+                                top_right = "┤",
+                            },
+                        },
+                        prompt = {
+                            top_left = "├",
+                            top = "─",
+                            top_right = "┤",
+                            right = "│",
+                            bottom_right = "┘",
+                            bottom = "─",
+                            bottom_left = "└",
+                            left = "│",
+                        },
+                        prompt_patch = {
+                            minimal = {
+                                bottom_right = "┘",
+                            },
+                            horizontal = {
+                                bottom_right = "┴",
+                            },
+                            vertical = {
+                                bottom_right = "┘",
+                            },
+                        },
+                        preview = {
+                            top_left = "┌",
+                            top = "─",
+                            top_right = "┐",
+                            right = "│",
+                            bottom_right = "┘",
+                            bottom = "─",
+                            bottom_left = "└",
+                            left = "│",
+                        },
+                        preview_patch = {
+                            minimal = {},
+                            horizontal = {
+                                bottom = "─",
+                                bottom_left = "",
+                                bottom_right = "┘",
+                                left = "",
+                                top_left = "",
+                            },
+                            vertical = {
+                                bottom = "",
+                                bottom_left = "",
+                                bottom_right = "",
+                                left = "│",
+                                top_left = "┌",
+                            },
+                        },
+                    }
+
+                    local results = make_popup({
+                        focusable = false,
+                        border = {
+                            style = border.results,
+                            text = {
+                                top = picker.results_title,
+                                top_align = "center",
+                            },
+                        },
+                        win_options = {
+                            winhighlight = "Normal:Normal",
+                        },
+                    })
+
+                    local prompt = make_popup({
+                        enter = true,
+                        border = {
+                            style = border.prompt,
+                            text = {
+                                top = picker.prompt_title,
+                                top_align = "center",
+                            },
+                        },
+                        win_options = {
+                            winhighlight = "Normal:Normal",
+                        },
+                    })
+
+                    local preview = make_popup({
+                        focusable = false,
+                        border = {
+                            style = border.preview,
+                            text = {
+                                top = picker.preview_title,
+                                top_align = "center",
+                            },
+                        },
+                    })
+
+                    local box_by_kind = {
+                        vertical = Layout.Box({
+                            Layout.Box(preview, { grow = 1 }),
+                            Layout.Box(results, { grow = 1 }),
+                            Layout.Box(prompt, { size = 3 }),
+                        }, { dir = "col" }),
+                        horizontal = Layout.Box({
+                            Layout.Box({
+                                Layout.Box(results, { grow = 1 }),
+                                Layout.Box(prompt, { size = 3 }),
+                            }, { dir = "col", size = "50%" }),
+                            Layout.Box(preview, { size = "50%" }),
+                        }, { dir = "row" }),
+                        minimal = Layout.Box({
+                            Layout.Box(results, { grow = 1 }),
+                            Layout.Box(prompt, { size = 3 }),
+                        }, { dir = "col" }),
+                    }
+
+                    local function get_box()
+                        local strategy = picker.layout_strategy
+                        if strategy == "vertical" or strategy == "horizontal" then
+                            return box_by_kind[strategy], strategy
+                        end
+
+                        local height, width = vim.o.lines, vim.o.columns
+                        local box_kind = "horizontal"
+                        if width < 100 then
+                            box_kind = "vertical"
+                            if height < 40 then
+                                box_kind = "minimal"
+                            end
+                        end
+                        return box_by_kind[box_kind], box_kind
+                    end
+
+                    local function prepare_layout_parts(layout, box_type)
+                        layout.results = results
+                        results.border:set_style(border.results_patch[box_type])
+
+                        layout.prompt = prompt
+                        prompt.border:set_style(border.prompt_patch[box_type])
+
+                        if box_type == "minimal" then
+                            layout.preview = nil
+                        else
+                            layout.preview = preview
+                            preview.border:set_style(border.preview_patch[box_type])
+                        end
+                    end
+
+                    local function get_layout_size(box_kind)
+                        return picker.layout_config[box_kind == "minimal" and "vertical" or box_kind].size
+                    end
+
+                    local box, box_kind = get_box()
+                    local layout = Layout({
+                        relative = "editor",
+                        position = "50%",
+                        size = get_layout_size(box_kind),
+                    }, box)
+
+                    layout.picker = picker
+                    prepare_layout_parts(layout, box_kind)
+
+                    local layout_update = layout.update
+                    function layout:update()
+                        local box, box_kind = get_box()
+                        prepare_layout_parts(layout, box_kind)
+                        layout_update(self, { size = get_layout_size(box_kind) }, box)
+                    end
+
+                    return TSLayout(layout)
+                end,
+            },
+        }
+        -- Enable telescope fzf native, if installed
+        pcall(require('telescope').load_extension, 'fzf')
+
+        -- See `:help telescope.builtin`
+        vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles,
+            { desc = '[?] Find recently opened files' })
+        vim.keymap.set('n', '<leader><space>',
+            require('telescope.builtin').buffers,
+            { desc = '[ ] Find existing buffers' })
+        vim.keymap.set('n', '<leader>/', function()
+            -- You can pass additional configuration to telescope to change theme, layout, etc.
+            require('telescope.builtin').current_buffer_fuzzy_find(require(
+                'telescope.themes').get_dropdown {
+                winblend = 10,
+                previewer = false
+            })
+        end, { desc = '[/] Fuzzily search in current buffer' })
+
+        vim.keymap.set('n', '<leader>gf',
+            require('telescope.builtin').git_files,
+            { desc = 'Search [G]it [F]iles' })
+        vim.keymap.set('n', '<leader>sf',
+            require('telescope.builtin').find_files,
+            --"<Cmd>Telescope frecency workspace=CWD<CR>",
+            { desc = '[S]earch [F]iles' })
+        vim.keymap.set('n', '<leader>sh',
+            require('telescope.builtin').help_tags,
+            { desc = '[S]earch [H]elp' })
+        --vim.keymap.set('n', '<leader>sw',
+        --    require('telescope.builtin').grep_string,
+        --    { desc = '[S]earch current [W]ord' })
+        vim.keymap.set('n', '<leader>sg',
+            require('telescope.builtin').live_grep,
+            { desc = '[S]earch by [G]rep' })
+        vim.keymap.set('n', '<leader>sG', ':LiveGrepGitRoot<cr>',
+            { desc = '[S]earch by [G]rep on Git Root' })
+        vim.keymap.set('n', '<leader>sd',
+            require('telescope.builtin').diagnostics,
+            { desc = '[S]earch [D]iagnostics' })
+        vim.keymap.set('n', '<leader>sc',
+            require('telescope.builtin').commands,
+            { desc = '[S]earch [C]ommands' })
+        vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume,
+            { desc = '[S]earch [R]esume' })
+    end
+}
