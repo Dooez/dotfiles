@@ -1,3 +1,12 @@
 {
- "output": ["HDMI-A-1"]
+    "output": ["HDMI-A-1"],
+    "hyprland/workspaces":{
+        "persistent-workspaces": {
+            "1": [], 
+            "2": [], 
+            "3": [], 
+            "4": [],
+            "5": [],
+        }
+    }
 }

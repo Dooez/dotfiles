@@ -27,7 +27,7 @@
         "spacing": 10
     },
     "cpu": {
-        "on-click": "flatpak run org.contourterminal.Contour class contour_btop early-exit-threshold 0 session contour_btop_session btop --preset 2",
+        "on-click": "contour class contour_btop early-exit-threshold 0 session contour_btop_session btop --preset 2",
         "format": "{}% ",
     },
     "clock": {
