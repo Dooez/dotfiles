@@ -1,11 +1,31 @@
 return {
-    'stevearc/conform.nvim',
-    opts = {
-        formatters_by_ft = {
-            lua = { "stylua" },
-            cpp = { "clang_format" }
-        }
+    {
+        "stevearc/conform.nvim",
+        dependencies = {
+            "williamboman/mason.nvim",
+        },
+        opts = {
+            formatters_by_ft = {
+                cpp = { "clang_format" },
+                python = { "isort", "black" },
+            },
+            format_on_save = {
+                timeout_ms = 500,
+                lsp_fallback = true,
+            },
+        },
     },
+    {
+        "zapling/mason-conform.nvim",
+        dependencies = {
+            "williamboman/mason.nvim",
+            "stevearc/conform.nvim",
+        },
+        config = function()
+            require("mason-conform").setup()
+        end,
+    },
+
     -- 'mhartington/formatter.nvim',
     -- config = function(plugin, opts) -- Provides the Format, FormatWrite, FormatLock, and FormatWriteLock commands
     --     local util = require "formatter.util"

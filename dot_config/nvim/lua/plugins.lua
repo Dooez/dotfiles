@@ -189,4 +189,8 @@ return {
             })
         end,
     },
+    {
+        "danymat/neogen",
+        config = true,
+    },
 }
