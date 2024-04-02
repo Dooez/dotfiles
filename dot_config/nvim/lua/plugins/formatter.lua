@@ -9,11 +9,12 @@ return {
                 cpp = { "clang_format" },
                 python = { "isort", "black" },
             },
-            format_on_save = {
-                timeout_ms = 500,
-                lsp_fallback = true,
-            },
         },
+        config = function(plugin, opts)
+            require('conform').setup(opts)
+            vim.keymap.set('n', '<leader>f', function() require('conform').format({ lsp_fallback = true }) end,
+                { desc = "[F]ormat current buffer." })
+        end
     },
     {
         "zapling/mason-conform.nvim",
