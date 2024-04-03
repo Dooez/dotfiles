@@ -193,4 +193,15 @@ return {
         "danymat/neogen",
         config = true,
     },
+    {
+        'nvim-treesitter/nvim-treesitter-context',
+        opts = {
+            mulitiline_threshold = 1,
+        },
+        config = function()
+            require('treesitter-context').setup({
+                multiline_threshold = 1,
+            })
+        end
+    },
 }

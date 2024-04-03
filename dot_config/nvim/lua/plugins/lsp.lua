@@ -92,6 +92,7 @@ return {
             -- [[ Configure LSP ]]
             --  This function gets run when an LSP connects to a particular buffer.
             local on_attach = function(client, bufnr)
+
                 -- In this case, we create a function that lets us more easily define mappings specific
                 -- for LSP related items. It sets the mode, buffer and description for us each time.
                 local nmap = function(keys, func, desc)
@@ -109,7 +110,6 @@ return {
                 nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
                 nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
                 --nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
-                    cmd = '/usr/bin/clangd'
                 nmap('<leader>ss', require('telescope.builtin').lsp_document_symbols, '[S]earch [S]ymbols')
                 nmap('<leader>sw', require('telescope.builtin').lsp_dynamic_workspace_symbols,
                     '[S]earch [W]orkspace Symbols')
