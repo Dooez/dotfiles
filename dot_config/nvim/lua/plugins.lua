@@ -1,4 +1,13 @@
 return {
+    {
+        "williamboman/mason.nvim",
+        opts = {
+            pip = {
+                upgrade_pip = true,
+            }
+        }
+
+    },
     -- Git related plugins
     'tpope/vim-fugitive',
     'tpope/vim-rhubarb',
@@ -62,7 +71,7 @@ return {
                     return { desc = "nvim-tree: " .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
                 end
 
-                -- default mappings
+                -- default uumappings
                 api.config.mappings.default_on_attach(bufnr)
 
                 -- custom mappings

@@ -25,16 +25,38 @@ return {
          local harpoonline = require("harpoonline")
          harpoonline.setup({
             icon = "",
-            formatter_opts = {
-               extended = { -- remove all spaces...
-                  indicators = { " 1 ", " 2 ", " 3 ", " 4 " },
-                  active_indicators = { "[1]", "[2]", "[3]", "[4]" },
-                  empty_slot = " · ",
-                  more_marks_indicator = " … ", -- horizontal elipsis. Disable with empty string
-                  more_marks_active_indicator = "[…]", -- Disable with empty string
-               },
-            },
-            formatter = 'extended',
+            custom_formatter = harpoonline.gen_formatter(
+               function(data)
+                  local empty = '·'
+                  local present = ''
+                  local selected = ''
+                  local extra = '󰇘'
+                  local extra_selected = '󰟃'
+                  local max_len = 4
+                  local format = ''
+                  local n_present = math.min(data.list_length, max_len)
+                  for i = 1, n_present do
+                     if data.buffer_idx and data.buffer_idx == i then
+                        format = format .. selected .. ' '
+                     else
+                        format = format .. present .. ' '
+                     end
+                  end
+                  for i = n_present + 1, max_len do
+                     format = format .. empty .. ' '
+                  end
+                  if data.list_length > max_len then
+                     if data.buffer_idx and data.buffer_idx > max_len then
+                        format = format .. extra_selected
+                     else
+                        format = format .. extra
+                     end
+                  else
+                     format = format:sub(1, -2)
+                  end
+                  return format
+               end
+            ),
             on_update = function() require("lualine").refresh() end,
 
          })
