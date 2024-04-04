@@ -92,7 +92,6 @@ return {
             -- [[ Configure LSP ]]
             --  This function gets run when an LSP connects to a particular buffer.
             local on_attach = function(client, bufnr)
-
                 -- In this case, we create a function that lets us more easily define mappings specific
                 -- for LSP related items. It sets the mode, buffer and description for us each time.
                 local nmap = function(keys, func, desc)
@@ -131,6 +130,11 @@ return {
                     vim.lsp.buf.format()
                 end, { desc = 'Format current buffer with LSP' })
                 -- require('folding').on_attach()
+
+                local filetype = vim.api.nvim_get_option_value('filetype', { buf = bufnr })
+                if filetype == 'cpp' or filetype == 'c' then
+                    nmap('<M-o>', '<CMD>ClangdSwitchSourceHeader<CR>','Switch to header/source.' )
+                end
                 require("nvim-navbuddy").attach(client, bufnr)
             end
 
