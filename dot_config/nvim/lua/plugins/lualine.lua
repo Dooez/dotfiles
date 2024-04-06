@@ -32,7 +32,7 @@ return {
                   local selected = ''
                   local extra = '󰇘'
                   local extra_selected = '󰟃'
-                  local max_len = 4
+                  local max_len = 5
                   local format = ''
                   local n_present = math.min(data.list_length, max_len)
                   for i = 1, n_present do

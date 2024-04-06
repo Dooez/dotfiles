@@ -1,0 +1,56 @@
+## System
+### Basic Utils ###
+networkmanager
+pipewire
+wireplumber
+pipewire-pulse
+
+### Desktop Environment ###
+sddm
+hyprland
+# hyprlock // use git version for now
+hypridle
+waybar
+thunar
+wofi
+wl-clipboard
+blueman
+network-manager-applet
+pavucontrol
+polkit-kde-agent
+qt5-wayland
+qt6-wayland
+
+#### AUR ####
+swaync
+swayosd-git
+contour
+hyprlock-git
+grimblast
+
+### Software ###
+ttf-jetbrains-mono-nerd
+neovim
+npm
+luarocks
+ripgrep
+fish
+starship
+chezmoi
+vivaldi
+telegram-desktop
+btop
+flatpak
+
+#### AUR ####
+hyprlock-git
+contour
+grimblast
+
+### Development ###
+clang
+cmake
+ninja
+
+
+

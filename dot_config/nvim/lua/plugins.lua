@@ -115,11 +115,11 @@ return {
     },
     {
         "folke/trouble.nvim",
-        --branch = 'dev',
+        branch = 'dev',
 
-        --opts = {
-        --group = false,
-        --},
+        opts = {
+            -- group = false,
+        },
     },
     {
         "lukas-reineke/indent-blankline.nvim",
