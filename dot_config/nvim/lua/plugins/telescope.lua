@@ -43,12 +43,12 @@ return {
         require('telescope').setup {
             defaults = {
                 mappings = { i = { ['<C-u>'] = false, ['<C-d>'] = false } },
-                layout_strategy = "flex",
+                layout_strategy = "vertical",
                 layout_config = {
                     horizontal = {
                         size = {
-                            width = "70%",
-                            height = "70%",
+                            width = "90%",
+                            height = "90%",
                         },
                     },
                     vertical = {
@@ -170,6 +170,9 @@ return {
                                 top = picker.preview_title,
                                 top_align = "center",
                             },
+                        },
+                        win_options = {
+                            winhighlight = "Normal:Normal",
                         },
                     })
 

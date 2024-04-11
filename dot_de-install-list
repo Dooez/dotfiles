@@ -12,6 +12,8 @@ hyprland
 hypridle
 waybar
 thunar
+gvfs-mtp
+gvfs-gphoto2
 wofi
 wl-clipboard
 blueman
@@ -51,6 +53,7 @@ grimblast
 clang
 cmake
 ninja
+cargo
 
 
 

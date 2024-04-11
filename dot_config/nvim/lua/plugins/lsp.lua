@@ -53,6 +53,7 @@ return {
                 -- rust_analyzer = {},
                 -- tsserver = {},
                 -- html = { filetypes = { 'html', 'twig', 'hbs'} },
+                neocmake = {},
                 matlab_ls = {},
                 lua_ls = {
                     Lua = {
