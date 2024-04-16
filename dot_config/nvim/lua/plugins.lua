@@ -75,8 +75,8 @@ return {
                 api.config.mappings.default_on_attach(bufnr)
 
                 -- custom mappings
-                vim.keymap.set('n', '<leader>e', api.tree.toggle, { desc = 'Toggle file panel' })
-                vim.keymap.set('n', '?', api.tree.toggle_help, opts('Help'))
+                -- vim.keymap.set('n', '<leader>e', api.tree.toggle, { desc = 'Toggle file panel' })
+                -- vim.keymap.set('n', '?', api.tree.toggle_help, opts('Help'))
             end
 
             -- pass to setup along with your other options
@@ -97,6 +97,7 @@ return {
                 }
             }
         end,
+        enabled = false,
     },
     {
         'akinsho/bufferline.nvim',
@@ -136,9 +137,6 @@ return {
 
         }
     },
-    -- {
-    --     'psliwka/vim-smoothie',
-    -- },
     {
         'windwp/nvim-autopairs',
         event = "InsertEnter",
@@ -213,4 +211,29 @@ return {
             })
         end
     },
+    {
+        'stevearc/oil.nvim',
+        opts = {},
+        -- Optional dependencies
+        dependencies = {
+            "nvim-tree/nvim-web-devicons"
+        },
+        opts = {
+            keymaps = {
+                ["<C-h>"] = false,
+                ["<C-l>"] = false,
+            },
+            keymap_help = {
+                border = "square",
+            },
+        },
+        config = function(plugin, opts)
+            require('oil').setup(opts)
+
+            vim.keymap.set('n', '<leader>e', '<CMD>Oil<CR>', { desc = 'Open Oil.' })
+            -- vim.keymap.set('n', '?', api.tree.toggle_help, opts('Help'))
+        end,
+        -- enabled = false,
+
+    }
 }

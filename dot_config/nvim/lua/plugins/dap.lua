@@ -175,6 +175,11 @@ return {
                 stopOnEntry = false,
             },
         }
+
+        dap.listeners.before.event_exited["dapui_config"] = function(_, event)
+        end
+        dap.listeners.before.event_terminated["dapui_config"] = function(_, event)
+        end
         local sign = vim.fn.sign_define
 
         sign("DapBreakpoint", { text = "●", texthl = "DapBreakpoint", linehl = "", numhl = "" })
