@@ -25,17 +25,6 @@ return {
             },
             'nvim-telescope/telescope.nvim',
             {
-                "Dooez/nvim-navbuddy",
-                dependencies = {
-                    "SmiteshP/nvim-navic",
-                    "MunifTanjim/nui.nvim"
-                },
-                opts = {
-                    lsp = { auto_attach = true },
-                    custom_hl_group = "Visual"
-                }
-            },
-            {
                 'p00f/clangd_extensions.nvim',
             }
         },
@@ -68,14 +57,6 @@ return {
             mason_lspconfig.setup {
                 ensure_installed = vim.tbl_keys(servers),
             }
-
-
-            -- local lspconfig = require('lspconfig')
-            -- lspconfig.clangd.setup{
-            --     settings = {
-            --         cmd = '/usr/bin/clangd'
-            --     }
-            -- }
 
             -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
             local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -120,23 +101,17 @@ return {
 
                 -- Lesser used LSP functionality
                 nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
-                --nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
-                --nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
-                --nmap('<leader>wl', function()
-                --print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-                --end, '[W]orkspace [L]ist Folders')
 
-                -- Create a command `:Format` local to the LSP buffer
-                vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
-                    vim.lsp.buf.format()
-                end, { desc = 'Format current buffer with LSP' })
-                -- require('folding').on_attach()
+                -- -- Create a command `:Format` local to the LSP buffer
+                -- vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
+                --     vim.lsp.buf.format()
+                -- end, { desc = 'Format current buffer with LSP' })
+                -- -- require('folding').on_attach()
 
                 local filetype = vim.api.nvim_get_option_value('filetype', { buf = bufnr })
                 if filetype == 'cpp' or filetype == 'c' then
-                    nmap('<M-o>', '<CMD>ClangdSwitchSourceHeader<CR>','Switch to header/source.' )
+                    nmap('<M-o>', '<CMD>ClangdSwitchSourceHeader<CR>', 'Switch to header/source.')
                 end
-                require("nvim-navbuddy").attach(client, bufnr)
             end
 
             mason_lspconfig.setup_handlers {
@@ -211,5 +186,28 @@ return {
             }
         end
 
+    },
+    {
+        "ray-x/lsp_signature.nvim",
+        event = "VeryLazy",
+        opts = {
+            hint_enable = false,
+            floating_window_above_cur_line = true,
+            handler_opts = {
+                border = "none",
+                -- border = {
+                --     {' ', "NormalFloat"},
+                --     {' ', "NormalFloat"},
+                --     {' ', "NormalFloat"},
+                --     {' ', "NormalFloat"},
+                --     {' ', "NormalFloat"},
+                --     {' ', "NormalFloat"},
+                --     {' ', "NormalFloat"},
+                --     {' ', "NormalFloat"},
+                -- }
+            },
+
+        },
+        config = function(_, opts) require 'lsp_signature'.setup(opts) end
     }
 }
