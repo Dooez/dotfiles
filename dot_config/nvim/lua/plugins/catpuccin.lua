@@ -14,6 +14,7 @@ return {
                 local iface = colors.rosewater
 
                 return {
+                    NormalFloat = { bg = colors.surface0 },
                     Constant = { fg = const },
                     String = { fg = string },
                     Character = { fg = string },

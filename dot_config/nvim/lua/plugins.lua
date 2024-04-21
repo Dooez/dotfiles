@@ -191,8 +191,16 @@ return {
                 },
                 scroll = {
                     timing = qdtiming
-                }
-
+                },
+                resize = {
+                    enable = false,
+                },
+                open = {
+                    enable = false,
+                },
+                clsoe = {
+                    enable = false,
+                },
             })
         end,
     },
