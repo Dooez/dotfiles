@@ -144,7 +144,7 @@ return {
                             },
                         },
                         win_options = {
-                            winhighlight = "Normal:Normal",
+                            winhighlight = "NormalFloat:NormalFloat",
                         },
                     })
 
@@ -158,7 +158,7 @@ return {
                             },
                         },
                         win_options = {
-                            winhighlight = "Normal:Normal",
+                            winhighlight = "NormalFloat:NormalFloat",
                         },
                     })
 
@@ -172,7 +172,7 @@ return {
                             },
                         },
                         win_options = {
-                            winhighlight = "Normal:Normal",
+                            winhighlight = "NormalFloat:NormalFloat",
                         },
                     })
 

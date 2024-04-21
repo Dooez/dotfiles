@@ -14,7 +14,6 @@ return {
                 local iface = colors.rosewater
 
                 return {
-                    NormalFloat = { bg = colors.surface0 },
                     Constant = { fg = const },
                     String = { fg = string },
                     Character = { fg = string },
@@ -52,46 +51,12 @@ return {
                     ['@keyword.return'] = { link = 'Keyword' },
                     ['@keyword.operator'] = { link = 'Keyword' },
                     ['@keyword.doxygen'] = { fg = colors.subtext0 },
-
-                    --NavicIconsFile = { fg = colors.blue },
-                    NavicIconsModule = { fg = colors.yellow },
-                    NavicIconsNamespace = { fg = colors.yellow },
-                    --NavicIconsPackage = { fg = colors.blue },
-                    NavicIconsClass = { fg = class },
-                    NavicIconsMethod = { fg = fn },
-                    NavicIconsProperty = { fg = colors.lavender },
-                    NavicIconsField = { fg = colors.lavender },
-                    NavicIconsConstructor = { fg = class },
-                    NavicIconsEnum = { fg = class },
-                    NavicIconsInterface = { fg = iface },
-                    NavicIconsFunction = { fg = fn },
-                    NavicIconsVariable = { fg = colors.text },
-                    NavicIconsConstant = { fg = const },
-                    NavicIconsString = { fg = string },
-                    NavicIconsNumber = { fg = const },
-                    NavicIconsBoolean = { fg = const },
-                    NavicIconsArray = { fg = colors.peach },
-                    NavicIconsObject = { fg = colors.rosewater },
-                    --NavicIconsKey = { fg = colors.pink, style = O.styles.keywords },
-                    --NavicIconsNull = { fg = colors.peach },
-                    NavicIconsEnumMember = { fg = const },
-                    NavicIconsStruct = { fg = class },
-                    --NavicIconsEvent = { fg = colors.blue },
-                    NavicIconsOperator = { fg = colors.red },
-                    NavicIconsTypeParameter = { fg = class },
-                    NavicText = { fg = colors.subtext0 },
-                    NavicSeparator = { fg = colors.subtext0 },
-
                 }
             end,
             integrations = {
-                navic = {
-                    enabled = true,
-                    custom_bg = 'lualine',
-                },
                 indent_blankline = {
                     scope_color = 'surface2'
-                }
+                },
             },
 
         })
