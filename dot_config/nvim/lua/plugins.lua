@@ -28,7 +28,7 @@ return {
 
             vim.keymap.set('n', '<leader>gd', function() vim.cmd('DiffviewOpen') end,
                 { desc = 'Open [G]it [D]iff panel.' })
-            vim.keymap.set('n', '<leader>gh', function() vim.cmd('DiffviewFileHistory') end,
+            vim.keymap.set('n', '<leader>gh', function() vim.cmd('DiffviewFileHistory --reflog') end,
                 { desc = 'Open [G]it [H]istroy panel.' })
             vim.keymap.set('n', '<leader>gc', function() vim.cmd('DiffviewClose') end, { desc = '[G]it panel [C]lose.' })
         end

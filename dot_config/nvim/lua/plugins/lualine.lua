@@ -25,7 +25,7 @@ return {
          local harpoonline = require("harpoonline")
          harpoonline.setup({
             icon = "",
-            custom_formatter = harpoonline.gen_formatter(
+            custom_formatter = 
                function(data)
                   local empty = '·'
                   local present = ''
@@ -34,9 +34,9 @@ return {
                   local extra_selected = '󰟃'
                   local max_len = 5
                   local format = ''
-                  local n_present = math.min(data.list_length, max_len)
+                  local n_present = math.min(#data.items, max_len)
                   for i = 1, n_present do
-                     if data.buffer_idx and data.buffer_idx == i then
+                     if data.active_idx and data.active_idx == i then
                         format = format .. selected .. ' '
                      else
                         format = format .. present .. ' '
@@ -45,8 +45,8 @@ return {
                   for i = n_present + 1, max_len do
                      format = format .. empty .. ' '
                   end
-                  if data.list_length > max_len then
-                     if data.buffer_idx and data.buffer_idx > max_len then
+                  if #data.items > max_len then
+                     if data.active_idx and data.active_idx > max_len then
                         format = format .. extra_selected
                      else
                         format = format .. extra
@@ -56,7 +56,7 @@ return {
                   end
                   return format
                end
-            ),
+            ,
             on_update = function() require("lualine").refresh() end,
 
          })
