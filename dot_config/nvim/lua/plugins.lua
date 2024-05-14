@@ -198,7 +198,7 @@ return {
                 open = {
                     enable = false,
                 },
-                clsoe = {
+                close = {
                     enable = false,
                 },
             })
