@@ -15,6 +15,7 @@ thunar
 udiskie
 gvfs-mtp
 gvfs-gphoto2
+gvfs-smb
 wofi
 wl-clipboard
 blueman
@@ -44,11 +45,10 @@ vivaldi
 telegram-desktop
 btop
 flatpak
-
-#### AUR ####
-hyprlock-git
-contour
-grimblast
+unp
+p7zip
+unrar-free
+networkmanager-openvpn
 
 ### Development ###
 clang
