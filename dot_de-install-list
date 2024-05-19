@@ -49,6 +49,8 @@ unp
 p7zip
 unrar-free
 networkmanager-openvpn
+remmina
+freerdp
 
 ### Development ###
 clang
