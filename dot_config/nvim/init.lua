@@ -1,6 +1,7 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
-vim.o.clipboard = 'unnamedplus'
+vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
+
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system {
@@ -15,6 +16,8 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup("plugins")
+
+vim.o.clipboard = 'unnamedplus'
 -- Make line numbers default
 vim.wo.number = true
 vim.wo.relativenumber = true
@@ -48,7 +51,7 @@ vim.o.timeoutlen = 300
 vim.o.completeopt = 'menuone,noselect'
 
 -- NOTE: You should make sure your terminal supports this
-vim.o.termguicolors = true
+-- vim.o.termguicolors = true
 
 -- [[ Basic Keymaps ]]
 
@@ -56,7 +59,6 @@ vim.o.termguicolors = true
 -- See `:help vim.keymap.set()`
 
 --vim.keymap.set('n', '<leader>z', 'zA', { desc = 'Toggle fold under cursor recureively' })
-vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 
 -- Remap for dealing with word wrap
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'",
@@ -75,8 +77,6 @@ vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'",
 -- See `:help telescope.builtin`
 -- vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles,
 --   { desc = '[?] Find recently opened files' })
-vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers,
-  { desc = '[ ] Find existing buffers' })
 
 vim.keymap.set('n', '<C-h>', '<C-w>h', { desc = 'Go to the left window' })
 vim.keymap.set('n', '<C-j>', '<C-w>j', { desc = 'Go to the down window' })
