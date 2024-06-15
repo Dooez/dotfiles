@@ -1,4 +1,5 @@
 return {
+    -- disable some features in big files
     'pteroctopus/faster.nvim',
     opts = {
         -- Behaviour table contains configuration for behaviours faster.nvim uses

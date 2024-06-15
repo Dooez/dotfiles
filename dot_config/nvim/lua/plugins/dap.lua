@@ -1,7 +1,6 @@
 return {
     'mfussenegger/nvim-dap',
     dependencies = {
-        -- Creates a beautiful debugger UI
         {
             'rcarriga/nvim-dap-ui',
             dependencies = {
@@ -11,8 +10,6 @@ return {
         'williamboman/mason.nvim', -- Installs the debug adapters for you
         'jay-babu/mason-nvim-dap.nvim',
         'rcarriga/nvim-notify'
-
-        --'leoluz/nvim-dap-go'
     },
     config = function()
         local dap = require 'dap'
@@ -31,9 +28,9 @@ return {
             -- online, please don't ask me how to install them :)
             ensure_installed = {
                 -- Update this to ensure that you have the debuggers for the langs you want
-                'clangd',
+                -- 'clangd',
                 'codelldb',
-                'clang-format'
+                -- 'clang-format'
             }
         }
 
@@ -48,6 +45,8 @@ return {
         vim.keymap.set('n', '<leader>B', function()
             dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
         end, { desc = 'Debug: Set Breakpoint' })
+        vim.keymap.set('n', '<F7>', dapui.toggle,
+            { desc = 'Debug: See last session result.' })
 
         -- Dap UI setup
         -- For more information, see |:help nvim-dap-ui|
@@ -75,31 +74,6 @@ return {
                 size = 15
             } },
         })
-        -- require("core.utils").load_mappings("dap")
-
-        -- {
-        --     -- Set icons to characters that are more likely to work in every terminal.
-        --     --    Feel free to remove or use ones that you like more! :)
-        --     --    Don't feel like these are good choices.
-        --     icons = { expanded = '▾', collapsed = '▸', current_frame = '*' },
-        --     controls = {
-        --         icons = {
-        --             pause = '⏸',
-        --             play = '▶',
-        --             step_into = '⏎',
-        --             step_over = '⏭',
-        --             step_out = '⏮',
-        --             step_back = 'b',
-        --             run_last = '▶▶',
-        --             terminate = '⏹',
-        --             disconnect = '⏏'
-        --         }
-        --     }
-        -- }
-
-        -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
-        vim.keymap.set('n', '<F7>', dapui.toggle,
-            { desc = 'Debug: See last session result.' })
 
         dap.listeners.after.event_initialized['dapui_config'] = dapui.open
         dap.listeners.before.event_terminated['dapui_config'] = dapui.close
@@ -146,14 +120,7 @@ return {
                 require('notify')('CMake not found.', vim.log.levels.ERROR, { title = 'Launching CMake target debug' })
                 return dap.ABORT
             end
-            local target = cmake.get_launch_target()
-            local err = cmake.build({ target = target }, cmake.close_executor)
-            if err == nil then
-                return cmake.get_build_directory() .. '/' .. cmake.get_launch_target()
-            else
-                require('notify')('CMake build error.', vim.log.levels.ERROR, { title = 'Launching CMake target debug' })
-                return dap.ABORT
-            end
+            return cmake.get_build_directory() .. '/' .. cmake.get_launch_target()
         end
         dap.configurations.cpp = {
             {
@@ -176,12 +143,10 @@ return {
             },
         }
 
-        dap.listeners.before.event_exited["dapui_config"] = function(_, event)
-        end
-        dap.listeners.before.event_terminated["dapui_config"] = function(_, event)
-        end
-        local sign = vim.fn.sign_define
+        dap.listeners.before.event_exited["dapui_config"] = function(_, event) end     -- do not close dap after end
+        dap.listeners.before.event_terminated["dapui_config"] = function(_, event) end -- do not close dap after end
 
+        local sign = vim.fn.sign_define
         sign("DapBreakpoint", { text = "●", texthl = "DapBreakpoint", linehl = "", numhl = "" })
         sign("DapBreakpointCondition", { text = "●", texthl = "DapBreakpointCondition", linehl = "", numhl = "" })
         sign("DapLogPoint", { text = "◆", texthl = "DapLogPoint", linehl = "", numhl = "" })

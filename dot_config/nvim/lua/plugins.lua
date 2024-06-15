@@ -1,5 +1,5 @@
 return {
-    {
+    { -- dependencie managment
         "williamboman/mason.nvim",
         opts = {
             pip = {
@@ -8,35 +8,43 @@ return {
         }
 
     },
-    -- Git related plugins
-    'tpope/vim-fugitive',
-    'tpope/vim-rhubarb',
-    -- Detect tabstop and shiftwidth automatically
-    'tpope/vim-sleuth',
-    {
+    'tpope/vim-fugitive', -- git commands
+    'tpope/vim-sleuth',   -- automatic indent detection
+    {                     -- git diffview
         'sindrets/diffview.nvim',
-        config = function()
-            require('diffview').setup({
-                file_panel = {
-                    listing_style = 'list',
-                    win_config = {
-                        position = 'bottom',
-                        height = 16,
-                    },
-                }
-            })
-
-            vim.keymap.set('n', '<leader>gd', function() vim.cmd('DiffviewOpen') end,
-                { desc = 'Open [G]it [D]iff panel.' })
-            vim.keymap.set('n', '<leader>gh', function() vim.cmd('DiffviewFileHistory --reflog') end,
-                { desc = 'Open [G]it [H]istroy panel.' })
-            vim.keymap.set('n', '<leader>gc', function() vim.cmd('DiffviewClose') end, { desc = '[G]it panel [C]lose.' })
-        end
+        opts = {
+            file_panel = {
+                listing_style = 'list',
+                win_config = {
+                    position = 'bottom',
+                    height = 16,
+                },
+            },
+        },
+        keys = {
+            {
+                '<leader>gd',
+                '<cmd>DiffviewOpen<cr>',
+                desc = 'Open [G]it [D]iff panel.',
+            },
+            {
+                '<leader>gh',
+                '<cmd>DiffviewFileHistory --reflog<cr>',
+                desc = 'Open [G]it [H]istroy panel.',
+            },
+            {
+                '<leader>gc',
+                '<cmd>DiffviewClose<cr>',
+                desc = '[G]it panel [C]lose.',
+            },
+        }
     },
-    { 'numToStr/Comment.nvim', opts = {} },
-    -- Useful plugin to show you pending keybinds.
-    { 'folke/which-key.nvim',  opts = {} },
-    {
+    { -- show pending keybinds
+        'folke/which-key.nvim',
+        event = "VeryLazy",
+        opts = {}
+    },
+    { -- folds
         'kevinhwang91/nvim-ufo',
         dependencies = {
             'kevinhwang91/promise-async'
@@ -57,49 +65,7 @@ return {
             })
         end
     },
-    {
-        "nvim-tree/nvim-tree.lua",
-        lazy = false,
-        dependencies = {
-            "nvim-tree/nvim-web-devicons",
-        },
-        config = function()
-            local function my_on_attach(bufnr)
-                local api = require "nvim-tree.api"
-
-                local function opts(desc)
-                    return { desc = "nvim-tree: " .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
-                end
-
-                -- default uumappings
-                api.config.mappings.default_on_attach(bufnr)
-
-                -- custom mappings
-                -- vim.keymap.set('n', '<leader>e', api.tree.toggle, { desc = 'Toggle file panel' })
-                -- vim.keymap.set('n', '?', api.tree.toggle_help, opts('Help'))
-            end
-
-            -- pass to setup along with your other options
-            require("nvim-tree").setup {
-                on_attach = my_on_attach,
-                renderer = {
-                    highlight_modified = 'icon',
-                    icons = {
-                        git_placement = 'after',
-                        modified_placement = 'before',
-                    },
-                },
-                modified = {
-                    enable = true,
-                },
-                view = {
-                    preserve_window_proportions = true,
-                }
-            }
-        end,
-        enabled = false,
-    },
-    {
+    { -- statusline
         'akinsho/bufferline.nvim',
         dependencies = 'nvim-tree/nvim-web-devicons',
         after = 'catppuccin',
@@ -114,13 +80,35 @@ return {
             })
         end
     },
-    {
+    { --
         "folke/trouble.nvim",
-        branch = 'dev',
-
+        cmd = "Trouble",
         opts = {
-            -- group = false,
+            modes = {
+                lsp_references = {
+                    title = false,
+                    format = "{file_icon}{filename} {pos} {text:ts}",
+                    groups = false,
+                }
+            }
         },
+        keys = {
+            {
+                "gd",
+                "<cmd>Trouble lsp_definitions focus=true auto_close=true<cr>",
+                desc = "[G]o to [D]efinition"
+            },
+            {
+                "gr",
+                "<cmd>Trouble lsp_references focus=true auto_close=true<cr>",
+                desc = "[G]o to [R]eferences"
+            },
+            {
+                "<leader>q",
+                "<cmd>Trouble diagnostics focus=true<cr>",
+                desc = "Diagnostics"
+            }
+        }
     },
     {
         "lukas-reineke/indent-blankline.nvim",
@@ -155,7 +143,7 @@ return {
             )
         end,
     },
-    {
+    { -- additional navigtaion engine
         "folke/flash.nvim",
         event = "VeryLazy",
         opts = {},
@@ -167,8 +155,8 @@ return {
             { "<c-s>", mode = { "c" },           function() require("flash").toggle() end,            desc = "Toggle Flash Search" },
         },
     },
-    'RRethy/vim-illuminate',
-    {
+    'RRethy/vim-illuminate', -- highlight word under the cursor
+    {                        -- scrolling animation
         'echasnovski/mini.animate',
         version = false,
         config = function()
@@ -182,25 +170,14 @@ return {
 
             animate.setup({
                 cursor = {
-                    timing = require('mini.animate').gen_timing.quadratic(
-                        {
-                            duration = 75,
-                            unit = 'total',
-                        }
-                    )
+                    timing = qdtiming
                 },
                 scroll = {
                     timing = qdtiming
                 },
-                resize = {
-                    enable = false,
-                },
-                open = {
-                    enable = false,
-                },
-                close = {
-                    enable = false,
-                },
+                resize = { enable = false },
+                open = { enable = false },
+                close = { enable = false },
             })
         end,
     },
@@ -208,25 +185,30 @@ return {
         "danymat/neogen",
         config = true,
     },
-    {
+    { -- context folds at the top of the buffer
         'nvim-treesitter/nvim-treesitter-context',
         opts = {
             mulitiline_threshold = 1,
         },
-        config = function()
-            require('treesitter-context').setup({
-                multiline_threshold = 1,
-            })
-        end
     },
-    {
+    { -- filesystem explorer
         'stevearc/oil.nvim',
-        opts = {},
         -- Optional dependencies
         dependencies = {
             "nvim-tree/nvim-web-devicons"
         },
+        -- keys = {
+        --     {
+        --         '<leader>e',
+        --         '<cmd>Oil<cr>',
+        --         desc = 'Open Oil',
+        --     },
+        -- },
         opts = {
+            default_file_explorer = true,
+            columns = {
+                'icon',
+            },
             keymaps = {
                 ["<C-h>"] = false,
                 ["<C-l>"] = false,
@@ -234,14 +216,64 @@ return {
             keymap_help = {
                 border = "square",
             },
+            skip_confirm_on_simple_edits = true,
+            lsp_file_methods = {
+                autosave_changes = true,
+            },
+            experimental_watch_for_changes = true,
         },
         config = function(plugin, opts)
             require('oil').setup(opts)
-
             vim.keymap.set('n', '<leader>e', '<CMD>Oil<CR>', { desc = 'Open Oil.' })
-            -- vim.keymap.set('n', '?', api.tree.toggle_help, opts('Help'))
         end,
-        -- enabled = false,
 
+    },
+    {
+        "smjonas/inc-rename.nvim",
+        enabled = false,
+        keys = {
+            {
+                '<leader>rn',
+                function()
+                    return ":IncRename " .. vim.fn.expand("<cword>")
+                end,
+                expr = true,
+                desc = "[R]e[n]ame",
+            },
+        },
+        config = true,
+    },
+    {
+        "folke/noice.nvim",
+        event = "VeryLazy",
+        enabled = false,
+        opts = {
+            lsp = {
+                -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
+                override = {
+                    ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+                    ["vim.lsp.util.stylize_markdown"] = true,
+                    ["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
+                },
+            },
+            -- you can enable a preset for easier configuration
+            presets = {
+                bottom_search = true,         -- use a classic bottom cmdline for search
+                command_palette = true,       -- position the cmdline and popupmenu together
+                long_message_to_split = true, -- long messages will be sent to a split
+                inc_rename = false,           -- enables an input dialog for inc-rename.nvim
+                lsp_doc_border = false,       -- add a border to hover docs and signature help
+            },
+        },
+        dependencies = {
+            -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
+            "MunifTanjim/nui.nvim",
+            -- OPTIONAL:
+            --   `nvim-notify` is only needed, if you want to use the notification view.
+            --   If not available, we use `mini` as the fallback
+            "rcarriga/nvim-notify",
+        },
     }
+
+
 }

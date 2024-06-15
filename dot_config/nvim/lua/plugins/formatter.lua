@@ -11,11 +11,19 @@ return {
                 cmake = { "cmakelang" },
             },
         },
+        -- keys = {
+        --     {
+        --         'leader<f>',
+        --         function() require('conform').format({ lsp_fallback = true }) end,
+        --         desc = "[F]ormat current buffer",
+        --     }
+        -- },
         config = function(plugin, opts)
             require('conform').setup(opts)
             vim.keymap.set('n', '<leader>f', function() require('conform').format({ lsp_fallback = true }) end,
                 { desc = "[F]ormat current buffer." })
         end
+
     },
     {
         "zapling/mason-conform.nvim",

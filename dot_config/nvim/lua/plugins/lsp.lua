@@ -87,8 +87,10 @@ return {
                 --nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
                 nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
 
-                nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
-                nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
+                -- nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
+                nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+
+                -- nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
                 nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
                 --nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
                 nmap('<leader>ss', require('telescope.builtin').lsp_document_symbols, '[S]earch [S]ymbols')
@@ -100,7 +102,6 @@ return {
                 nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
 
                 -- Lesser used LSP functionality
-                nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
                 -- -- Create a command `:Format` local to the LSP buffer
                 -- vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
