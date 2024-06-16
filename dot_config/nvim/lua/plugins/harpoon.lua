@@ -1,51 +1,21 @@
 return {
-
     'ThePrimeagen/harpoon',
     branch = 'harpoon2',
     dependencies = {
         'nvim-lua/plenary.nvim',
         'nvim-telescope/telescope.nvim'
     },
-    config = function()
-        local harpoon = require('harpoon')
-        harpoon:setup({})
+    keys = {
+        { '<leader>ha', function() require('harpoon'):list():add() end,                                    desc = "[H]arpoon [A]dd to List" },
+        { '<leader>hr', function() require('harpoon'):list():remove() end,                                 desc = "[H]arpoon [R]emove from List" },
 
-        -- basic telescope configuration
-        local conf = require("telescope.config").values
-        local function toggle_telescope(harpoon_files)
-            local file_paths = {}
-            for _, item in ipairs(harpoon_files.items) do
-                table.insert(file_paths, item.value)
-            end
+        { '<C-e>',      function() require('harpoon').ui:toggle_quick_menu(require('harpoon'):list()) end, desc = 'Show Harpoon List' },
 
-            require("telescope.pickers").new({}, {
-                prompt_title = "Harpoon",
-                finder = require("telescope.finders").new_table({
-                    results = file_paths,
-                }),
-                previewer = conf.file_previewer({}),
-                sorter = conf.generic_sorter({}),
-            }):find()
-        end
-
-        vim.keymap.set("n", "<C-e>", function() toggle_telescope(harpoon:list()) end,
-            { desc = "Open harpoon window." })
-
-        vim.keymap.set("n", "<leader>ha", function() harpoon:list():add() end, { desc = "[H]arpoon [A]dd to List." })
-        vim.keymap.set("n", "<leader>hr", function() harpoon:list():remove() end, { desc = "[H]arpoon [R]emove from List." })
-
-        vim.keymap.set("n", "<C-e>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
-
-        vim.keymap.set("n", "<F11>", function() harpoon:list():select(1) end, {desc = "Harpoon select entry 1."})
-        vim.keymap.set("n", "<F12>", function() harpoon:list():select(2) end, {desc = "Harpoon select entry 2."})
-        vim.keymap.set("n", "<F13>", function() harpoon:list():select(3) end, {desc = "Harpoon select entry 3."})
-        vim.keymap.set("n", "<F14>", function() harpoon:list():select(4) end, {desc = "Harpoon select entry 4."})
-        vim.keymap.set("n", "<F15>", function() harpoon:list():select(5) end, {desc = "Harpoon select entry 5."})
-
-        -- Toggle previous & next buffers stored within Harpoon list
-        vim.keymap.set("n", "<C-S-P>", function() harpoon:list():prev() end)
-        vim.keymap.set("n", "<C-S-N>", function() harpoon:list():next() end)
-    end
-
-
+        { "<F11>",      function() require('harpoon'):list():select(1) end,                                desc = "Harpoon select entry 1." },
+        { "<F12>",      function() require('harpoon'):list():select(2) end,                                desc = "Harpoon select entry 2." },
+        { "<F13>",      function() require('harpoon'):list():select(3) end,                                desc = "Harpoon select entry 3." },
+        { "<F14>",      function() require('harpoon'):list():select(4) end,                                desc = "Harpoon select entry 4." },
+        { "<F15>",      function() require('harpoon'):list():select(5) end,                                desc = "Harpoon select entry 5." },
+    },
+    config = true,
 }

@@ -3,15 +3,15 @@ return {
         -- LSP Configuration & Plugins
         'neovim/nvim-lspconfig',
         dependencies = {
-            -- Automatically install LSPs to stdpath for neovim
-            { 'williamboman/mason.nvim', opts = {} },
+            'williamboman/mason.nvim',
             'williamboman/mason-lspconfig.nvim',
-            -- Useful status updates for LSP
-            { 'j-hui/fidget.nvim',       tag = 'legacy', opts = {} },
-            -- Additional lua configuration, makes nvim stuff amazing!
+            'p00f/clangd_extensions.nvim',
             'folke/neodev.nvim',
-            {
-                -- Autocompletion
+            { -- Useful status updates for LSP
+                'j-hui/fidget.nvim',
+                opts = {}
+            },
+            { -- Autocompletion
                 'hrsh7th/nvim-cmp',
                 dependencies = {
                     -- Snippet Engine & its associated nvim-cmp source
@@ -24,9 +24,7 @@ return {
                 }
             },
             'nvim-telescope/telescope.nvim',
-            {
-                'p00f/clangd_extensions.nvim',
-            }
+            'folke/trouble.nvim'
         },
         config = function()
             -- Enable the following language servers
@@ -51,13 +49,9 @@ return {
                     },
                 },
             }
-            -- Ensure the servers above are installed
-            local mason_lspconfig = require 'mason-lspconfig'
-
-            mason_lspconfig.setup {
+            require('mason-lspconfig').setup {
                 ensure_installed = vim.tbl_keys(servers),
             }
-
             -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
             local capabilities = vim.lsp.protocol.make_client_capabilities()
             capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
@@ -71,11 +65,82 @@ return {
                 local hl = "DiagnosticSign" .. type
                 vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
             end
+
+            -- Floating window for renaming
+            local rename_win
+            local rename_open = false
+            vim.api.nvim_create_augroup('CloseRenameBuf', { clear = true })
+            vim.api.nvim_create_autocmd('BufLeave', {
+                group = 'CloseRenameBuf',
+                callback = function()
+                    local filetype = vim.api.nvim_get_option_value(
+                        'filetype',
+                        {
+                            buf = vim.api.nvim_get_current_buf()
+                        }
+                    )
+                    if filetype == 'rename' then
+                        vim.api.nvim_win_close(rename_win, true)
+                        rename_open = false
+                    end
+                end
+            })
+
+            local function rename()
+                local pos = vim.api.nvim_win_get_cursor(0)
+                local cword = vim.fn.expand('<cword>')
+                local opts = {
+                    relative = 'cursor',
+                    row = 0,
+                    col = 0,
+                    width = 30,
+                    height = 1,
+                    style = 'minimal',
+                    border = 'single',
+                    title = '[rename]',
+                    title_pos = 'right',
+                }
+                local buf = vim.api.nvim_create_buf(false, true)
+                vim.api.nvim_set_option_value(
+                    'filetype',
+                    'rename',
+                    { buf = buf }
+                )
+
+                if rename_open then
+                    vim.api.nvim_win_close(rename_win, true)
+                end
+                rename_win = vim.api.nvim_open_win(buf, true, opts)
+                rename_open = true
+
+                local abort = function()
+                    vim.api.nvim_win_close(rename_win, true)
+                    vim.cmd('stopinsert')
+                end
+
+                local function dorename()
+                    local new_name = vim.trim(vim.fn.getline('.'))
+                    vim.api.nvim_win_close(rename_win, true)
+                    vim.api.nvim_win_set_cursor(0, pos)
+                    vim.lsp.buf.rename(new_name)
+                    vim.cmd('stopinsert')
+                end
+
+                vim.api.nvim_buf_set_lines(buf, 0, -1, false, { cword })
+                vim.keymap.set({ 'n', 'v' }, '<C-c>', abort, { silent = true, buffer = buf })
+                vim.keymap.set({ 'n', 'v' }, '<Esc>', abort, { silent = true, buffer = buf })
+                vim.keymap.set({ 'n', 'v' }, '<CR>', dorename, { silent = true, buffer = buf })
+                vim.keymap.set({ 'i' }, '<CR>',
+                    function()
+                        pos[2] = pos[2] + 1 -- workaround for cursor moving 1 position after exitint exit mode
+                        dorename()
+                    end,
+                    { silent = true, buffer = buf })
+            end
+
             -- [[ Configure LSP ]]
             --  This function gets run when an LSP connects to a particular buffer.
             local on_attach = function(client, bufnr)
-                -- In this case, we create a function that lets us more easily define mappings specific
-                -- for LSP related items. It sets the mode, buffer and description for us each time.
                 local nmap = function(keys, func, desc)
                     if desc then
                         desc = 'LSP: ' .. desc
@@ -84,15 +149,17 @@ return {
                     vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
                 end
 
+                nmap('<leader>rn', rename, '[R]e[n]ame')
                 --nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
                 nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
 
-                -- nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
+                nmap('gd', '<cmd>Trouble lsp_definitions<cr>', '[G]oto [D]efinition')
                 nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
-                -- nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
-                nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
-                --nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
+                nmap('gr', '<cmd>Trouble lsp_references<cr>', '[G]oto [R]eferences')
+                nmap('gI', '<cmd>Trouble lsp_implementations<cr>', '[G]oto [I]mplementation')
+
+                -- nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
                 nmap('<leader>ss', require('telescope.builtin').lsp_document_symbols, '[S]earch [S]ymbols')
                 nmap('<leader>sw', require('telescope.builtin').lsp_dynamic_workspace_symbols,
                     '[S]earch [W]orkspace Symbols')
@@ -101,21 +168,15 @@ return {
                 nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
                 nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
 
-                -- Lesser used LSP functionality
 
-                -- -- Create a command `:Format` local to the LSP buffer
-                -- vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
-                --     vim.lsp.buf.format()
-                -- end, { desc = 'Format current buffer with LSP' })
-                -- -- require('folding').on_attach()
-
+                -- language specific
                 local filetype = vim.api.nvim_get_option_value('filetype', { buf = bufnr })
                 if filetype == 'cpp' or filetype == 'c' then
                     nmap('<M-o>', '<CMD>ClangdSwitchSourceHeader<CR>', 'Switch to header/source.')
                 end
             end
 
-            mason_lspconfig.setup_handlers {
+            require('mason-lspconfig').setup_handlers {
                 function(server_name)
                     require('lspconfig')[server_name].setup {
                         capabilities = capabilities,
@@ -191,22 +252,13 @@ return {
     {
         "ray-x/lsp_signature.nvim",
         event = "VeryLazy",
+        enabled = true,
         opts = {
             hint_enable = false,
             floating_window_above_cur_line = true,
             padding = ' ',
             handler_opts = {
                 border = "none",
-                -- border = {
-                --     {' ', "NormalFloat"},
-                --     {' ', "NormalFloat"},
-                --     {' ', "NormalFloat"},
-                --     {' ', "NormalFloat"},
-                --     {' ', "NormalFloat"},
-                --     {' ', "NormalFloat"},
-                --     {' ', "NormalFloat"},
-                --     {' ', "NormalFloat"},
-                -- }
             },
 
         },
