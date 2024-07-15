@@ -13,13 +13,16 @@ return {
                 -- Table which contains names of features that will be disabled when
                 -- bigfile is opened. Feature names can be seen in features table below.
                 -- features_disabled can also be set to "all" and then all features that
-                -- are on (on=true) are going to be disabled for this behaviour
                 features_disabled = {
-                    "illuminate", "matchparen", "lsp", "treesitter",
-                    "indent_blankline", "vimopts", "syntax", "filetype","minianimate"
+                    "illuminate", "matchparen", "indent_blankline", "minianimate"
                 },
+                -- are on (on=true) are going to be disabled for this behaviour
+                -- features_disabled = {
+                --     "illuminate", "matchparen", --"lsp", "treesitter",
+                --     "indent_blankline", "vimopts", "syntax", "filetype", "minianimate"
+                -- },
                 -- Files larger than `filesize` are considered big files. Value is in MB.
-                filesize = 2,
+                filesize = 0.2,
                 -- Autocmd pattern that controls on which files behaviour will be applied.
                 -- `*` means any file.
                 pattern = "*",
@@ -122,6 +125,7 @@ return {
             },
             minianimate = {
                 on = true,
+                defer = false,
                 enable = function() vim.b.minianimate_disable = false end,
                 disable = function() vim.b.minianimate_disable = true end,
             },

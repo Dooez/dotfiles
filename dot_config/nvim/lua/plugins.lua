@@ -86,18 +86,17 @@ return {
         "folke/trouble.nvim",
         cmd = "Trouble",
         opts = {
+            focus = true,
+            auto_close = true,
             modes = {
                 lsp_references = {
                     title = false,
                     format = "{file_icon}{filename} {pos} {text:ts}",
                     groups = false,
-                    focus = true,
-                    autot_close = true,
-                },
-                lsp_definitions = {
-                    focus = true,
-                    auto_close = true,
                 }
+            },
+            keys = {
+                ["<cr>"] = "jump_close"
             }
         },
         keys = {
