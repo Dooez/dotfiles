@@ -5,6 +5,33 @@ return {
     config = function()
         require('catppuccin').setup({
             flavour = 'macchiato',
+            color_overrides = {
+                macchiato = {
+                    surface2 = "#4c5265",
+                    surface1 = "#3f4454",
+                    surface0 = "#2f333f",
+                    base = "#242730",
+                    mantle = "#1c1f26",
+                    crust = "#181B21",
+                    rosewater = "#c9a6a6",
+                    pink = "#cc88af",
+                    mauve = "#a588cc",
+                    red = "#cc7474",
+                    peach = "#f5a97f",
+                    yellow = "#cca83b",
+                    green = "#7fa57b",
+                    teal = "#4cbaa4",
+                    blue = "#7a98cc",
+                    lavender = "#a9aed9",
+                    text = "#c1bab3",
+                    subtext1 = "#a6a09a",
+                    subtext0 = "#918c87",
+                    overlay2 = "#807b76",
+                    overlay1 = "#736f6a",
+                    overlay0 = "#66625f",
+
+                },
+            },
             custom_highlights = function(colors)
                 local generic = colors.red
                 local class = colors.blue
