@@ -7,6 +7,30 @@ return {
             flavour = 'macchiato',
             color_overrides = {
                 macchiato = {
+                    surface2 = "#4e5468",
+                    surface1 = "#414656",
+                    surface0 = "#313542",
+                    base = "#242730",
+                    mantle = "#1c1f26",
+                    crust = "#181B21",
+                    rosewater = "#e1b9b9",
+                    pink = "#d68fb8",
+                    mauve = "#b394de",
+                    red = "#e07f7f",
+                    peach = "#f5a97f",
+                    yellow = "#d9b445",
+                    green = "#92bf8e",
+                    teal = "#4cbaa4",
+                    blue = "#82a2d9",
+                    lavender = "#b1b6e2",
+                    text = "#d9d1c9",
+                    subtext1 = "#b3aca6",
+                    subtext0 = "#a19b96",
+                    overlay2 = "#8c8781",
+                    overlay1 = "#807b76",
+                    overlay0 = "#736e6b",
+                },
+                backup = {
                     surface2 = "#4c5265",
                     surface1 = "#3f4454",
                     surface0 = "#2f333f",
@@ -29,8 +53,7 @@ return {
                     overlay2 = "#807b76",
                     overlay1 = "#736f6a",
                     overlay0 = "#66625f",
-
-                },
+                }
             },
             custom_highlights = function(colors)
                 local generic = colors.red
@@ -64,7 +87,7 @@ return {
                     Structure = { fg = colors.sapphire },
                     Special = { fg = generic },
                     Type = { fg = class },
-                    ['@namespace'] = { fg = colors.text, style = {} },
+                    ['@module'] = { fg = colors.text, style = {} },
                     ['@parameter'] = { fg = colors.peach, style = { 'italic' } },
                     ['@lsp.type.class'] = { fg = class },
                     ['@lsp.type.concept'] = { fg = iface },
@@ -78,6 +101,8 @@ return {
                     ['@keyword.return'] = { link = 'Keyword' },
                     ['@keyword.operator'] = { link = 'Keyword' },
                     ['@keyword.doxygen'] = { fg = colors.subtext0 },
+
+                    ['IlluminatedWordText'] = { bg = colors.surface0 },
                 }
             end,
             integrations = {

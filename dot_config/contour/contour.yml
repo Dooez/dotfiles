@@ -259,7 +259,7 @@ profiles:
         # Font related configuration (font face, styles, size, rendering mode).
         font:
             # Initial font size in pixels.
-            size: 16
+            size: 12
 
             # DPI scaling factor applied on top of the system configured on (default: 1.0).
             dpi_scale: 1.0
@@ -413,7 +413,7 @@ profiles:
             blur: false
 
         # Specifies a colorscheme to use (alternatively the colors can be inlined).
-        colors: "catppuccin_macchiato"
+        colors: "tim_arc_darker"
 
         # Hyperlinks (via OSC-8) can be stylized and colorized on hover.
         hyperlink_decoration:
@@ -428,38 +428,47 @@ profiles:
 # You may alternatively use 0x as prefix instead of #.
 # For example 0x102030 is equal to '#102030'.
 color_schemes:
-    catppuccin_macchiato:
+    tim_arc_darker:
         # Default colours
         default:
-            background: "#24273A" # base
-            foreground: "#CAD3F5" # text
+            background: "#242730" # base
+            foreground: "#d9d1c9" # text
 
         # Cursor colour
         cursor:
-            default: "#F4DBD6" # rosewater
-            text: "#24273A" # base
+            default: "#a19b96" # subtext0
+            text: "#242730" # base
 
         # Normal colors
         normal:
-            black: "#494D64" # surface1
-            red: "#ED8796" # red
-            green: "#A6DA95" # green
-            yellow: "#EED49F" # yellow
-            blue: "#8AADF4" # blue
-            magenta: "#F5BDE6" # pink
-            cyan: "#8BD5CA" # teal
-            white: "#B8C0E0" # subtext1
+            black: "#414656" # surface1
+            red: "#e07f7f" # red
+            green: "#92bf8e" # green
+            yellow: "#d9b445" # yellow
+            blue: "#82a2d9" # blue
+            magenta: "#d68fb8" # pink
+            cyan: "#4cbaa4" # teal
+            white: "#b3aca6" # subtext1
 
         # Bright colors
         bright:
-            black: "#5B6078" # surface2
-            red: "#ED8796" # red
-            green: "#A6DA95" # green
-            yellow: "#EED49F" # yellow
-            blue: "#8AADF4" # blue
-            magenta: "#F5BDE6" # pink
-            cyan: "#8BD5CA" # teal
-            white: "#A5ADCB" # subtext0
+            black: "#414656" # surface1
+            red: "#e07f7f" # red
+            green: "#92bf8e" # green
+            yellow: "#d9b445" # yellow
+            blue: "#82a2d9" # blue
+            magenta: "#d68fb8" # pink
+            cyan: "#4cbaa4" # teal
+            white: "#b3aca6" # subtext1
+        
+        vi_mode_highlight:
+            background: '#313542' # surface0
+
+        vi_mode_cursorline:
+            foreground: CellForeground
+            foreground_alpha: 0.5
+            background: '#d9d1c9'
+            background_alpha: 0.15
 
     default:
         # Default colors
