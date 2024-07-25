@@ -10,6 +10,7 @@ sddm
 hyprland
 # hyprlock // use git version for now
 hypridle
+hyprpaper
 waybar
 thunar
 udiskie
@@ -24,6 +25,8 @@ pavucontrol
 polkit-kde-agent
 qt5-wayland
 qt6-wayland
+qt5ct
+qt6ct
 
 #### AUR ####
 swaync
