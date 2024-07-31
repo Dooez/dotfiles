@@ -33,9 +33,9 @@ return {
                 desc = 'Open [G]it [H]istroy panel.',
             },
             {
-                '<leader>gc',
+                '<leader>gq',
                 '<cmd>DiffviewClose<cr>',
-                desc = '[G]it panel [C]lose.',
+                desc = '[G]it panel [Q]uit.',
             },
         }
     },
@@ -161,6 +161,15 @@ return {
             { "R",     mode = { "o", "x" },      function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
             { "<c-s>", mode = { "c" },           function() require("flash").toggle() end,            desc = "Toggle Flash Search" },
         },
+    },
+    {
+        "kylechui/nvim-surround",
+        event = "VeryLazy",
+        config = function()
+            require("nvim-surround").setup({
+                -- Configuration here, or leave empty to use defaults
+            })
+        end
     },
     'RRethy/vim-illuminate', -- highlight word under the cursor
     {                        -- scrolling animation
