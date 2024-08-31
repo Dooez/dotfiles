@@ -14,13 +14,6 @@ return {
         event = "VeryLazy",
         opts = {}
     },
-    { -- folds
-        'kevinhwang91/nvim-ufo',
-        dependencies = {
-            'kevinhwang91/promise-async'
-        },
-        opts = {},
-    },
     {
         'nvim-treesitter/nvim-treesitter',
         config = function()
@@ -37,7 +30,14 @@ return {
             })
         end
     },
-    { -- statusline
+    { -- save files as sudo
+        "Grafcube/suedit.nvim",
+        dependencies = "akinsho/toggleterm.nvim",
+    },
+
+
+    -- special buffers
+    { -- tabs line
         'akinsho/bufferline.nvim',
         dependencies = 'nvim-tree/nvim-web-devicons',
         after = 'catppuccin',
@@ -70,16 +70,6 @@ return {
             }
         },
         keys = {
-            -- {
-            --     "gd",
-            --     "<cmd>Trouble lsp_definitions focus=true auto_close=true<cr>",
-            --     desc = "[G]o to [D]efinition"
-            -- },
-            -- {
-            --     "gr",
-            --     "<cmd>Trouble lsp_references focus=true auto_close=true<cr>",
-            --     desc = "[G]o to [R]eferences"
-            -- },
             {
                 "<leader>q",
                 "<cmd>Trouble diagnostics focus=true<cr>",
@@ -87,110 +77,12 @@ return {
             }
         }
     },
-    {
-        "lukas-reineke/indent-blankline.nvim",
-        main = "ibl",
-        opts = {
-            indent = {
-                char = '┆',
-            },
-            scope = {
-                char = '║',
-                show_start = false,
-                show_end = false,
-            },
-
-        }
-    },
-    {
-        'windwp/nvim-autopairs',
-        event = "InsertEnter",
-        dependencies = {
-            'hrsh7th/nvim-cmp',
-        },
-        config = function()
-            require 'nvim-autopairs'.setup({
-                enable_check_bracket_line = false,
-            })
-            local cmp_autopairs = require('nvim-autopairs.completion.cmp')
-            local cmp = require('cmp')
-            cmp.event:on(
-                'confirm_done',
-                cmp_autopairs.on_confirm_done()
-            )
-        end,
-    },
-    { -- additional navigtaion engine
-        "folke/flash.nvim",
-        event = "VeryLazy",
-        opts = {},
-        keys = {
-            { "s",     mode = { "n", "x", "o" }, function() require("flash").jump() end,              desc = "Flash" },
-            { "S",     mode = { "n", "x", "o" }, function() require("flash").treesitter() end,        desc = "Flash Treesitter" },
-            { "r",     mode = "o",               function() require("flash").remote() end,            desc = "Remote Flash" },
-            { "R",     mode = { "o", "x" },      function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
-            { "<c-s>", mode = { "c" },           function() require("flash").toggle() end,            desc = "Toggle Flash Search" },
-        },
-    },
-    {
-        "kylechui/nvim-surround",
-        event = "VeryLazy",
-        config = function()
-            require("nvim-surround").setup({
-                -- Configuration here, or leave empty to use defaults
-            })
-        end
-    },
-    'RRethy/vim-illuminate', -- highlight word under the cursor
-    {                        -- scrolling animation
-        'echasnovski/mini.animate',
-        version = false,
-        config = function()
-            local animate = require('mini.animate')
-            local qdtiming = require('mini.animate').gen_timing.quadratic(
-                {
-                    duration = 150,
-                    unit = 'total',
-                }
-            )
-
-            animate.setup({
-                cursor = {
-                    timing = qdtiming
-                },
-                scroll = {
-                    timing = qdtiming
-                },
-                resize = { enable = false },
-                open = { enable = false },
-                close = { enable = false },
-            })
-        end,
-    },
-    {
-        "danymat/neogen",
-        config = true,
-    },
-    { -- context folds at the top of the buffer
-        'nvim-treesitter/nvim-treesitter-context',
-        opts = {
-            mulitiline_threshold = 1,
-        },
-        config = true,
-    },
     { -- filesystem explorer
         'stevearc/oil.nvim',
         -- Optional dependencies
         dependencies = {
             "nvim-tree/nvim-web-devicons"
         },
-        -- keys = {
-        --     {
-        --         '<leader>e',
-        --         '<cmd>Oil<cr>',
-        --         desc = 'Open Oil',
-        --     },
-        -- },
         opts = {
             default_file_explorer = true,
             columns = {
@@ -215,19 +107,104 @@ return {
         end,
 
     },
+
+
+    -- editing and navigtaion
     {
-        "Grafcube/suedit.nvim",
-        dependencies = "akinsho/toggleterm.nvim",
+        'windwp/nvim-autopairs',
+        event = "InsertEnter",
+        dependencies = {
+            'hrsh7th/nvim-cmp',
+        },
+        config = function()
+            require 'nvim-autopairs'.setup({
+                enable_check_bracket_line = false,
+            })
+            local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+            local cmp = require('cmp')
+            cmp.event:on(
+                'confirm_done',
+                cmp_autopairs.on_confirm_done()
+            )
+        end,
     },
-    -- {
-    --     "f-person/git-blame.nvim",
-    --     -- event = "VeryLazy",
-    --     opts = {
-    --         message_template = " <summary> • <date> • <author> • <<sha>>", -- template for the blame message, check the Message template section for more options
-    --         date_format = "%d-%m-%Y %H:%M:%S", -- template for the date, check Date format section for more options
-    --         virtual_text_column = 1, -- virtual text start column, check Start virtual text at column section for more options
-    --     },
-    --     keypmas = {
-    --         ["<leader>gb"] = "<CMD>GitBlameToggle<CR>",
-    --     },
+    {
+        "kylechui/nvim-surround",
+        event = "VeryLazy",
+        config = true,
+    },
+    { -- docs generation
+        "danymat/neogen",
+        event = "VeryLazy",
+        config = true,
+    },
+    { -- additional navigtaion engine
+        "folke/flash.nvim",
+        event = "VeryLazy",
+        opts = {},
+        keys = {
+            { "s",     mode = { "n", "x", "o" }, function() require("flash").jump() end,              desc = "Flash" },
+            { "S",     mode = { "n", "x", "o" }, function() require("flash").treesitter() end,        desc = "Flash Treesitter" },
+            { "r",     mode = "o",               function() require("flash").remote() end,            desc = "Remote Flash" },
+            { "R",     mode = { "o", "x" },      function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+            { "<c-s>", mode = { "c" },           function() require("flash").toggle() end,            desc = "Toggle Flash Search" },
+        },
+    },
+
+
+    -- visual
+    { -- context folds at the top of the buffer
+        'nvim-treesitter/nvim-treesitter-context',
+        opts = {
+            mulitiline_threshold = 1,
+        },
+        config = true,
+    },
+    { -- folds
+        'kevinhwang91/nvim-ufo',
+        dependencies = {
+            'kevinhwang91/promise-async'
+        },
+        opts = {},
+    },
+
+    'RRethy/vim-illuminate', -- highlight word under the cursor
+    {
+        "lukas-reineke/indent-blankline.nvim",
+        main = "ibl",
+        opts = {
+            indent = {
+                char = '┆',
+            },
+            scope = {
+                char = '║',
+                show_start = false,
+                show_end = false,
+            },
+        }
+    },
+    { -- scrolling animation
+        'echasnovski/mini.animate',
+        version = false,
+        config = function()
+            local animate = require('mini.animate')
+            local qdtiming = require('mini.animate').gen_timing.quadratic(
+                {
+                    duration = 150,
+                    unit = 'total',
+                }
+            )
+            animate.setup({
+                cursor = {
+                    timing = qdtiming
+                },
+                scroll = {
+                    timing = qdtiming
+                },
+                resize = { enable = false },
+                open = { enable = false },
+                close = { enable = false },
+            })
+        end,
+    },
 }
