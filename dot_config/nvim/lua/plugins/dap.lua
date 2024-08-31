@@ -79,6 +79,7 @@ return {
         dap.listeners.before.event_terminated['dapui_config'] = dapui.close
         dap.listeners.before.event_exited['dapui_config'] = dapui.close
 
+
         dap.adapters.codelldb = {
             type = 'server',
             port = "13000",
@@ -86,10 +87,14 @@ return {
                 -- CHANGE THIS to your path!
                 command = 'codelldb',
                 args = { "--port", "13000" },
-
                 -- On windows you may have to uncomment this:
                 -- detached = false,
             }
+        }
+        dap.adapters.lldb = {
+            type = 'executable',
+            command = '/usr/bin/lldb-dap', -- adjust as needed, must be absolute path
+            name = 'lldb'
         }
         dap.adapters.sudolldb = {
             type = 'server',
@@ -98,10 +103,15 @@ return {
                 -- CHANGE THIS to your path!
                 command = '/home/timofey/sudo.lldb',
                 args = { "--port", "13000" },
-
                 -- On windows you may have to uncomment this:
                 -- detached = false,
             }
+        }
+
+        dap.adapters.gdb = {
+            type = "executable",
+            command = "gdb",
+            args = { "--interpreter=dap", "--eval-command", "set print pretty on" }
         }
         dap.adapters.sudogdb = {
             type = 'executable',
@@ -113,7 +123,6 @@ return {
                 },
             }
         }
-        dap.adapters.lldb = dap.adapters.codelldb
         local get_cmake_target = function()
             local cmake_found, cmake = pcall(require, 'cmake-tools')
             if not cmake_found then
@@ -123,9 +132,26 @@ return {
             return cmake.get_build_directory() .. '/' .. cmake.get_launch_target()
         end
         dap.configurations.cpp = {
+            -- {
+            --     name = "codelldb=>CMake Target",
+            --     type = "codelldb",
+            --     request = "launch",
+            --     program = get_cmake_target,
+            --     cwd = '${workspaceFolder}',
+            --     stopOnEntry = false,
+            -- },
             {
                 name = "lldb=>CMake Target",
-                type = "codelldb",
+                type = "lldb",
+                request = "launch",
+                program = get_cmake_target,
+                cwd = '${workspaceFolder}',
+                stopOnEntry = false,
+                runInTerminal = true,
+            },
+            {
+                name = "gdb=>CMake Target",
+                type = "gdb",
                 request = "launch",
                 program = get_cmake_target,
                 cwd = '${workspaceFolder}',

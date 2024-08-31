@@ -23,6 +23,7 @@ blueman
 network-manager-applet
 pavucontrol
 polkit-kde-agent
+gnome-keyring
 qt5-wayland
 qt6-wayland
 qt5ct

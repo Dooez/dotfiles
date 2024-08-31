@@ -8,38 +8,8 @@ return {
         }
 
     },
-    'tpope/vim-fugitive', -- git commands
-    'tpope/vim-sleuth',   -- automatic indent detection
-    {                     -- git diffview
-        'sindrets/diffview.nvim',
-        opts = {
-            file_panel = {
-                listing_style = 'list',
-                win_config = {
-                    position = 'bottom',
-                    height = 16,
-                },
-            },
-        },
-        keys = {
-            {
-                '<leader>gd',
-                '<cmd>DiffviewOpen<cr>',
-                desc = 'Open [G]it [D]iff panel.',
-            },
-            {
-                '<leader>gh',
-                '<cmd>DiffviewFileHistory --reflog<cr>',
-                desc = 'Open [G]it [H]istroy panel.',
-            },
-            {
-                '<leader>gq',
-                '<cmd>DiffviewClose<cr>',
-                desc = '[G]it panel [Q]uit.',
-            },
-        }
-    },
-    { -- show pending keybinds
+    'tpope/vim-sleuth', -- automatic indent detection
+    {                   -- show pending keybinds
         'folke/which-key.nvim',
         event = "VeryLazy",
         opts = {}
@@ -245,4 +215,19 @@ return {
         end,
 
     },
+    {
+        "Grafcube/suedit.nvim",
+        dependencies = "akinsho/toggleterm.nvim",
+    },
+    -- {
+    --     "f-person/git-blame.nvim",
+    --     -- event = "VeryLazy",
+    --     opts = {
+    --         message_template = " <summary> • <date> • <author> • <<sha>>", -- template for the blame message, check the Message template section for more options
+    --         date_format = "%d-%m-%Y %H:%M:%S", -- template for the date, check Date format section for more options
+    --         virtual_text_column = 1, -- virtual text start column, check Start virtual text at column section for more options
+    --     },
+    --     keypmas = {
+    --         ["<leader>gb"] = "<CMD>GitBlameToggle<CR>",
+    --     },
 }
