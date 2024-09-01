@@ -40,8 +40,8 @@ return {
             },
         },
         opts = {
-            commit_detail_view = function(commit)
-                vim.cmd('DiffviewOpen ' .. commit);
+            commit_detail_view = function(commit, row, path)
+                vim.cmd('DiffviewOpen ' .. commit .. ' --selected-file=' .. path);
             end,
         }
 
