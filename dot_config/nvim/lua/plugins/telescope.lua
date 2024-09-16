@@ -58,6 +58,28 @@ return {
             require('telescope.builtin').resume,
             desc = '[S]earch [R]esume',
         },
+        {
+            '<leader>sm',
+            function()
+                require('telescope.builtin').lsp_document_symbols({
+                    symbols = 'method',
+                    show_line = true,
+                    symbol_type_width = 8,
+                })
+            end,
+            desc = '[S]earch [M]ethods',
+        },
+        {
+            '<leader>sM',
+            function()
+                require('telescope.builtin').lsp_document_symbols({
+                    symbols = 'field',
+                    show_line = true,
+                    symbol_type_width = 8,
+                })
+            end,
+            desc = '[S]earch Data [M]embers',
+        },
 
     },
     config = function()
@@ -291,6 +313,5 @@ return {
         }
         -- Enable telescope fzf native, if installed
         pcall(require('telescope').load_extension, 'fzf')
-
     end
 }
