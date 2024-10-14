@@ -192,14 +192,63 @@ return {
             -- [[ Configure nvim-cmp ]]
             -- See `:help cmp`
             local cmp = require 'cmp'
-            local luasnip = require 'luasnip'
+            local ls = require 'luasnip'
             require('luasnip.loaders.from_vscode').lazy_load()
-            luasnip.config.setup {}
+            ls.config.setup {}
+            local s = ls.snippet
+            -- local sn = ls.snippet_node
+            -- local t = ls.text_node
+            local i = ls.insert_node
+            -- local f = ls.function_node
+            -- local c = ls.choice_node
+            -- local d = ls.dynamic_node
+            -- local r = ls.restore_node
+            local fmt = require("luasnip.extras.fmt").fmt
+            -- local rep = require("luasnip.extras").rep
+            ls.add_snippets("all", {
+                s("rangesnip",
+                    fmt(
+                        [=[
+                    using value_type = {1};
+                    using reference = value_type&;
+                    using const_reference = const value_type&;
+                    using size_type       = uZ;
+                    using difference_type = std::ptrdiff_t;
+                    using pointer         = value_type*;
+                    using const_pointer   = const value_type*;
+                    using iterator        = pointer;
+                    using const_iterator  = const_pointer;
+
+                    [[nodiscard]] auto data() noexcept -> pointer {{return m_data_ptr;}}
+                    [[nodiscard]] auto data() const noexcept -> const_pointer {{return m_data_ptr;}}
+                    [[nodiscard]] auto size() const noexcept -> size_type {{return m_size;}}
+                    [[nodiscard]] auto length() const noexcept -> size_type {{return size();}}
+
+                    [[nodiscard]] auto begin() noexcept -> iterator {{return data();}}
+                    [[nodiscard]] auto cbegin() const noexcept -> const_iterator {{return data();}}
+                    [[nodiscard]] auto begin() const noexcept -> const_iterator {{treturn data();}}
+                    [[nodiscard]] auto end() noexcept -> iterator {{return data() + size();}}
+                    [[nodiscard]] auto cend() const noexcept -> const_iterator {{return data() + size();}}
+                    [[nodiscard]] auto end() const noexcept -> const_iterator {{return cend();}}
+
+                    [[nodiscard]] auto operator[](size_type pos) noexcept -> reference {{return *(data() + pos);}}
+                    [[nodiscard]] auto operator[](size_type pos) const noexcept -> const_reference {{return *(data() + pos);}}
+                    [[nodiscard]] auto at(size_type pos) noexcept -> reference {{
+                    if (pos >= size()) throw std::out_of_range("pos >= size()");
+                    return *(data() + pos);
+                    }}
+                    ]=],
+                        {
+                            i(1, "T"),
+                        }
+                    )
+                ),
+            })
 
             cmp.setup {
                 snippet = {
                     expand = function(args)
-                        luasnip.lsp_expand(args.body)
+                        ls.lsp_expand(args.body)
                     end,
                 },
                 mapping = cmp.mapping.preset.insert {
@@ -215,8 +264,8 @@ return {
                     ['<Tab>'] = cmp.mapping(function(fallback)
                         if cmp.visible() then
                             cmp.select_next_item()
-                        elseif luasnip.expand_or_locally_jumpable() then
-                            luasnip.expand_or_jump()
+                        elseif ls.expand_or_locally_jumpable() then
+                            ls.expand_or_jump()
                         else
                             fallback()
                         end
@@ -224,8 +273,8 @@ return {
                     ['<S-Tab>'] = cmp.mapping(function(fallback)
                         if cmp.visible() then
                             cmp.select_prev_item()
-                        elseif luasnip.locally_jumpable(-1) then
-                            luasnip.jump(-1)
+                        elseif ls.locally_jumpable(-1) then
+                            ls.jump(-1)
                         else
                             fallback()
                         end
