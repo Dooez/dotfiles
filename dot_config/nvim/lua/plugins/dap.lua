@@ -9,7 +9,7 @@ return {
         },
         'williamboman/mason.nvim', -- Installs the debug adapters for you
         'jay-babu/mason-nvim-dap.nvim',
-        'rcarriga/nvim-notify'
+        -- 'rcarriga/nvim-notify'
     },
     config = function()
         local dap = require 'dap'
