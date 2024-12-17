@@ -111,6 +111,14 @@ return {
 
     -- editing and navigtaion
     {
+        'echasnovski/mini.ai',
+        version = '*'
+    },
+    -- {
+    --     'echasnovski/mini.surround',
+    --     version = '*'
+    -- },
+    {
         'windwp/nvim-autopairs',
         event = "InsertEnter",
         dependencies = {
@@ -240,4 +248,14 @@ return {
             },
         },
     },
+    {
+        "OXY2DEV/markview.nvim",
+        lazy = false, -- Recommended
+        -- ft = "markdown" -- If you decide to lazy-load anyway
+
+        dependencies = {
+            "nvim-treesitter/nvim-treesitter",
+            "nvim-tree/nvim-web-devicons"
+        }
+    }
 }

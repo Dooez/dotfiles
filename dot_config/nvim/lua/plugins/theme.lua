@@ -38,6 +38,7 @@ return {
                 local fn = colors.green
                 local const = colors.mauve
                 local iface = colors.rosewater
+                local member = colors.lavender
 
                 return {
                     Constant = { fg = const },
@@ -68,6 +69,7 @@ return {
                     ['@lsp.type.class'] = { fg = class },
                     ['@lsp.type.concept'] = { fg = iface },
                     ['@lsp.mod.readonly'] = { fg = const },
+                    ['@lsp.typemod.variable.static'] = { fg = member, style = { 'bold' } },
                     ['@lsp.typemod.method.readonly'] = { link = "@lsp.type.method" },
                     ['@lsp.typemod.parameter.readonly'] = { link = "@parameter" },
                     ['@function.builtin'] = { link = "Funciton" },
