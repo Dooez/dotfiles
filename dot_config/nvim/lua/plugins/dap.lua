@@ -9,7 +9,7 @@ return {
         },
         'williamboman/mason.nvim', -- Installs the debug adapters for you
         'jay-babu/mason-nvim-dap.nvim',
-        -- 'rcarriga/nvim-notify'
+        'rcarriga/nvim-notify'
     },
     config = function()
         local dap = require 'dap'
@@ -80,34 +80,42 @@ return {
         dap.listeners.before.event_exited['dapui_config'] = dapui.close
 
 
+        local dap_cortex_debug = require('dap-cortex-debug')
+        require('dap').configurations.cpp = {
+            dap_cortex_debug.openocd_config {
+                name = 'Example debugging with OpenOCD',
+                cwd = '${workspaceFolder}',
+                executable = '${workspaceFolder}/build/app',
+                configFiles = { '${workspaceFolder}/build/openocd/connect.cfg' },
+                gdbTarget = 'localhost:3333',
+                rttConfig = dap_cortex_debug.rtt_config(0),
+                showDevDebugOutput = false,
+            },
+        }
+
+        dap.adapters.lldb = {
+            type = 'executable',
+            command = '/usr/bin/lldb-dap',
+            options = {
+                initialize_timeout_sec = 10,
+            },
+        }
         dap.adapters.codelldb = {
             type = 'server',
             port = "13000",
             executable = {
-                -- CHANGE THIS to your path!
                 command = 'codelldb',
                 args = { "--port", "13000" },
-                -- On windows you may have to uncomment this:
-                -- detached = false,
             }
         }
-        dap.adapters.lldb = {
-            type = 'executable',
-            command = '/usr/bin/lldb-dap', -- adjust as needed, must be absolute path
-            name = 'lldb'
-        }
-        dap.adapters.sudolldb = {
+        dap.adapters.sudocodelldb = {
             type = 'server',
             port = "13000",
             executable = {
-                -- CHANGE THIS to your path!
                 command = '/home/timofey/sudo.lldb',
                 args = { "--port", "13000" },
-                -- On windows you may have to uncomment this:
-                -- detached = false,
             }
         }
-
         dap.adapters.gdb = {
             type = "executable",
             command = "gdb",
@@ -131,6 +139,14 @@ return {
             end
             return cmake.get_build_directory() .. '/' .. cmake.get_launch_target()
         end
+        local get_cmake_target_elf = function()
+            local cmake_found, cmake = pcall(require, 'cmake-tools')
+            if not cmake_found then
+                require('notify')('CMake not found.', vim.log.levels.ERROR, { title = 'Launching CMake target debug' })
+                return dap.ABORT
+            end
+            return cmake.get_build_directory() .. '/' .. cmake.get_launch_target() .. '.elf'
+        end
         dap.configurations.cpp = {
             -- {
             --     name = "codelldb=>CMake Target",
@@ -146,8 +162,9 @@ return {
                 request = "launch",
                 program = get_cmake_target,
                 cwd = '${workspaceFolder}',
-                stopOnEntry = false,
+                -- stopOnEntry = false,
                 runInTerminal = true,
+                args = {},
             },
             {
                 name = "gdb=>CMake Target",
@@ -158,8 +175,8 @@ return {
                 stopOnEntry = false,
             },
             {
-                name = "root=>lldb=>CMake Target",
-                type = "sudolldb",
+                name = "root=>codelldb=>CMake Target",
+                type = "sudocodelldb",
                 request = "launch",
                 program = get_cmake_target,
                 cwd = '${workspaceFolder}',
@@ -167,6 +184,49 @@ return {
                 sourceLanguages = { "cpp" },
                 stopOnEntry = false,
             },
+            dap_cortex_debug.openocd_config {
+                name = 'OpenOCD',
+                cwd = '${workspaceFolder}',
+                executable = get_cmake_target_elf,
+                configFiles = {
+                    "interface/stlink.cfg",
+                    "target/stm32f4x.cfg"
+                },
+                gdbTarget = 'localhost:3333',
+                rttConfig = dap_cortex_debug.rtt_config(0),
+                showDevDebugOutput = false,
+            },
+            {
+                name = 'OpenOCD Manual',
+                type = 'cortex-debug',
+                request = 'launch',
+                servertype = 'openocd',
+                serverpath = 'openocd',
+                gdbPath = '/usr/bin/arm-none-eabi-gdb',
+                toolchainPath = '/usr/bin',
+                toolchainPrefix = 'arm-none-eabi',
+                runToEntryPoint = 'main',
+                swoConfig = { enabled = false },
+                showDevDebugOutput = "raw",
+                gdbTarget = 'localhost:3333',
+                cwd = '${workspaceFolder}',
+                executable = '${workspaceFolder}/build/antenna-mover.elf',
+                configFiles = {
+                    "interface/stlink.cfg",
+                    "target/stm32f4x.cfg"
+                },
+                rttConfig = {
+                    address = 'auto',
+                    decoders = {
+                        {
+                            label = 'RTT:0',
+                            port = 0,
+                            type = 'console'
+                        }
+                    },
+                    enabled = true
+                },
+            }
         }
 
         dap.listeners.before.event_exited["dapui_config"] = function(_, event) end     -- do not close dap after end
