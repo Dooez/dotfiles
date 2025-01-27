@@ -1,0 +1,15 @@
+[mode]
+normal_main = { bg = "blue", fg = "black", bold = true }
+normal_alt  = { fg = "blue", bg = "black" }
+
+# Select mode
+select_main = { bg = "magenta", fg = "black", bold = true }
+select_alt  = { fg = "magenta", bg = "black" }
+
+# Unset mode
+# unset_main = { bg = "red", bold = true }
+# unset_alt  = { fg = "red", bg = "black" }
+
+[status]
+separator_open  = ""
+separator_close = ""

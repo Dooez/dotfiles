@@ -1,0 +1,5 @@
+[manager]
+linemode = "size"
+
+[preview]
+image_delay = 0
