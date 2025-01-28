@@ -8,7 +8,7 @@ pipewire-pulse
 ### Desktop Environment ###
 sddm
 hyprland
-# hyprlock // use git version for now
+hyprlock 
 hypridle
 hyprpaper
 waybar
@@ -19,6 +19,7 @@ gvfs-gphoto2
 gvfs-smb
 wofi
 wl-clipboard
+contour
 blueman
 network-manager-applet
 pavucontrol
@@ -32,8 +33,6 @@ qt6ct
 #### AUR ####
 swaync
 swayosd-git
-contour
-hyprlock-git
 grimblast
 
 ### Software ###
@@ -61,6 +60,7 @@ clang
 cmake
 ninja
 cargo
+lldb
 
 
 
