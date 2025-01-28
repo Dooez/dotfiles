@@ -114,6 +114,7 @@ return {
         'echasnovski/mini.ai',
         version = '*'
     },
+    {
         'numToStr/Comment.nvim',
         config = true,
     },
