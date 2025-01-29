@@ -96,9 +96,9 @@ return {
         dap.adapters.lldb = {
             type = 'executable',
             command = '/usr/bin/lldb-dap',
-            options = {
-                initialize_timeout_sec = 10,
-            },
+            -- options = {
+            --     initialize_timeout_sec = 10,
+            -- },
         }
         dap.adapters.codelldb = {
             type = 'server',

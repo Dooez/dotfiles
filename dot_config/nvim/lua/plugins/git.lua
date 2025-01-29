@@ -1,6 +1,22 @@
 return {
-    'tpope/vim-fugitive', -- git commands
-    {                     -- git diffview
+    {
+        'tpope/vim-fugitive', -- git commands,
+        config = function()
+            require("which-key").add({
+                {
+                    '<leader>gc',
+                    '<cmd>Git commit<cr>',
+                    desc = '[G]it [C]ommit'
+                },
+                {
+                    '<leader>gp',
+                    '<cmd>Git push<cr>',
+                    desc = '[G]it [P]ush'
+                },
+            })
+        end
+    },
+    { -- git diffview
         'sindrets/diffview.nvim',
         opts = {
             file_panel = {
@@ -48,16 +64,74 @@ return {
     },
     {
         "harrisoncramer/gitlab.nvim",
+        lazy = false,
         dependencies = {
             "MunifTanjim/nui.nvim",
             "nvim-lua/plenary.nvim",
             "sindrets/diffview.nvim",
             -- "stevearc/dressing.nvim",                                -- Recommended but not required. Better UI for pickers.
-            "nvim-tree/nvim-web-devicons",                           -- Recommended but not required. Icons in discussion tree.
+            "nvim-tree/nvim-web-devicons", -- Recommended but not required. Icons in discussion tree.
+            'folke/which-key.nvim',
         },
         build = function() require("gitlab.server").build(true) end, -- Builds the Go binary
-        config = function()
-            require("gitlab").setup()
+        keys = {
+            {
+                '<leader>glc',
+                function() require('gitlab').choose_merge_request() end,
+                desc = '[C]hoose merge request'
+            },
+            {
+                '<leader>glS',
+                function() require('gitlab').review() end,
+                desc = '[S]tart review'
+            },
+            {
+                '<leader>glo',
+                function() require('gitlab').open_in_browser() end,
+                desc = '[O]pen in browser'
+            },
+            {
+                '<leader>gln',
+                function() require('gitlab').create_note() end,
+                desc = 'Create [N]ote'
+            },
+        },
+        opts = {
+            disable_all = false,    -- Disable all mappings created by the plugin
+            help = "g?",            -- Open a help popup for local keymaps when a relevant view is focused (popup, discussion panel, etc)
+            global = {
+                disable_all = true, -- Disable all global mappings created by the plugin
+                -- add_assignee = "<leader>glaa",
+                -- delete_assignee = "<leader>glad",
+                -- add_label = "<leader>glla",
+                -- delete_label = "<leader>glld",
+                -- add_reviewer = "<leader>glra",
+                -- delete_reviewer = "<leader>glrd",
+                -- approve = "<leader>glA",              -- Approve MR
+                -- revoke = "<leader>glR",               -- Revoke MR approval
+                -- merge = "<leader>glM",                -- Merge the feature branch to the target branch and close MR
+                -- create_mr = "<leader>glC",            -- Create a new MR for currently checked-out feature branch
+                -- choose_merge_request = "<leader>glc", -- Chose MR for review (if necessary check out the feature branch)
+                -- start_review = "<leader>glS",         -- Start review for the currently checked-out branch
+                -- summary = "<leader>gls",              -- Show the editable summary of the MR
+                -- copy_mr_url = "<leader>glu",          -- Copy the URL of the MR to the system clipboard
+                -- open_in_browser = "<leader>glo",      -- Openthe URL of the MR in the default Internet browser
+                -- create_note = "<leader>gln",          -- Create a note (comment not linked to a specific line)
+                -- pipeline = "<leader>glp",             -- Show the pipeline status
+                -- toggle_discussions = "<leader>gld",   -- Toggle the discussions window
+                -- toggle_draft_mode = "<leader>glD",    -- Toggle between draft mode (comments posted as drafts) and live mode (comments are posted immediately)
+                -- publish_all_drafts = "<leader>glP",   -- Publish all draft comments/notes
+            },
+
+        },
+        config = function(plugin, opts)
+            require("gitlab").setup(opts)
+            require("which-key").add({
+                {
+                    '<leader>gl',
+                    group = '[G]it[L]ab',
+                },
+            })
         end,
     }
 }
