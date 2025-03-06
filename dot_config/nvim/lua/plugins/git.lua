@@ -76,7 +76,7 @@ return {
         build = function() require("gitlab.server").build(true) end, -- Builds the Go binary
         keys = {
             {
-                '<leader>glc',
+                '<leader>glC',
                 function() require('gitlab').choose_merge_request() end,
                 desc = '[C]hoose merge request'
             },
@@ -94,6 +94,11 @@ return {
                 '<leader>gln',
                 function() require('gitlab').create_note() end,
                 desc = 'Create [N]ote'
+            },
+            {
+                '<leader>glc',
+                function() require('gitlab').create_comment() end,
+                desc = 'Create [C]omment'
             },
         },
         opts = {

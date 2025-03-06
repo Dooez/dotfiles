@@ -245,4 +245,36 @@ return {
             "nvim-tree/nvim-web-devicons"
         }
     },
+    {
+        "amitds1997/remote-nvim.nvim",
+        version = "*",                       -- Pin to GitHub releases
+        dependencies = {
+            "nvim-lua/plenary.nvim",         -- For standard functions
+            "MunifTanjim/nui.nvim",          -- To build the plugin UI
+            "nvim-telescope/telescope.nvim", -- For picking b/w different remote methods
+        },
+        config = true,
+    },
+    {
+        's1n7ax/nvim-window-picker',
+        name = 'window-picker',
+        event = 'VeryLazy',
+        version = '2.*',
+        keys = {
+            {
+                "<C-w>p",
+                mode = { "n", "x", "o" },
+                function()
+                    local win = require('window-picker').pick_window({ hint = 'floating-big-letter' });
+                    if win then
+                        vim.api.nvim_set_current_win(win)
+                    end
+                end,
+                desc = "[P]ick window"
+            },
+        },
+        config = function()
+            require 'window-picker'.setup()
+        end,
+    },
 }
