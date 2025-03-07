@@ -9,12 +9,16 @@ return {
         },
         'williamboman/mason.nvim', -- Installs the debug adapters for you
         'jay-babu/mason-nvim-dap.nvim',
-        'rcarriga/nvim-notify'
+        'rcarriga/nvim-notify',
+        "theHamsta/nvim-dap-virtual-text",
+        "kdheepak/nvim-dap-julia",
+
     },
     config = function()
         local dap = require 'dap'
         local dapui = require 'dapui'
 
+        require("nvim-dap-julia").setup({})
         require('mason-nvim-dap').setup {
             -- Makes a best effort to setup the various debuggers with
             -- reasonable debug configurations
