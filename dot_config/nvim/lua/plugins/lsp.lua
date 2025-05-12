@@ -141,47 +141,92 @@ return {
             -- [[ Configure LSP ]]
             --  This function gets run when an LSP connects to a particular buffer.
             local on_attach = function(client, bufnr)
-                local nmap = function(keys, func, desc)
-                    if desc then
-                        desc = 'LSP: ' .. desc
+            end
+            vim.api.nvim_create_autocmd('LspAttach', {
+                group = vim.api.nvim_create_augroup('my-lsp-attach', { clear = true }),
+                callback = function(event)
+                    local map = function(keys, func, desc, mode)
+                        mode = mode or 'n'
+                        if desc then
+                            desc = 'LSP: ' .. desc
+                        end
+                        vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = desc })
                     end
 
-                    vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
-                end
+                    map('<leader>rn', rename, '[R]e[n]ame')
+                    --nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
+                    map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
 
-                nmap('<leader>rn', rename, '[R]e[n]ame')
-                --nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
-                nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
+                    map('gd', '<cmd>Trouble lsp_definitions<cr>', '[G]oto [D]efinition')
+                    map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
-                nmap('gd', '<cmd>Trouble lsp_definitions<cr>', '[G]oto [D]efinition')
-                nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+                    map('gr', '<cmd>Trouble lsp_references<cr>', '[G]oto [R]eferences')
+                    map('gI', '<cmd>Trouble lsp_implementations<cr>', '[G]oto [I]mplementation')
 
-                nmap('gr', '<cmd>Trouble lsp_references<cr>', '[G]oto [R]eferences')
-                nmap('gI', '<cmd>Trouble lsp_implementations<cr>', '[G]oto [I]mplementation')
+                    -- nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
+                    map('<leader>ss', require('telescope.builtin').lsp_document_symbols, '[S]earch [S]ymbols')
+                    map('<leader>sw', require('telescope.builtin').lsp_dynamic_workspace_symbols,
+                        '[S]earch [W]orkspace Symbols')
 
-                -- nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
-                nmap('<leader>ss', require('telescope.builtin').lsp_document_symbols, '[S]earch [S]ymbols')
-                nmap('<leader>sw', require('telescope.builtin').lsp_dynamic_workspace_symbols,
-                    '[S]earch [W]orkspace Symbols')
-
-                -- See `:help K` for why this keymap
-                nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
-                nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
+                    -- See `:help K` for why this keymap
+                    map('K', vim.lsp.buf.hover, 'Hover Documentation')
+                    map('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
 
 
-                -- language specific
-                local filetype = vim.api.nvim_get_option_value('filetype', { buf = bufnr })
-                if filetype == 'cpp' or filetype == 'c' then
-                    nmap('<M-o>', '<CMD>ClangdSwitchSourceHeader<CR>', 'Switch to header/source.')
-                end
-            end
+                    -- language specific
+                    local filetype = vim.api.nvim_get_option_value('filetype', { buf = bufnr })
+                    if filetype == 'cpp' or filetype == 'c' then
+                        map('<M-o>', '<CMD>ClangdSwitchSourceHeader<CR>', 'Switch to header/source.')
+                    end
+                    local function client_supports_method(client, method, bufnr)
+                        if vim.fn.has 'nvim-0.11' == 1 then
+                            return client:supports_method(method, bufnr)
+                        else
+                            return client.supports_method(method, { bufnr = bufnr })
+                        end
+                    end
+                    local client = vim.lsp.get_client_by_id(event.data.client_id)
+                    if client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_documentHighlight, event.buf) then
+                        local highlight_augroup = vim.api.nvim_create_augroup('my-lsp-highlight',
+                            { clear = false })
+                        vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
+                            buffer = event.buf,
+                            group = highlight_augroup,
+                            callback = vim.lsp.buf.document_highlight,
+                        })
+
+                        vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
+                            buffer = event.buf,
+                            group = highlight_augroup,
+                            callback = vim.lsp.buf.clear_references,
+                        })
+
+                        vim.api.nvim_create_autocmd('LspDetach', {
+                            group = vim.api.nvim_create_augroup('my-lsp-detach', { clear = true }),
+                            callback = function(event2)
+                                vim.lsp.buf.clear_references()
+                                vim.api.nvim_clear_autocmds { group = 'my-lsp-highlight', buffer = event2.buf }
+                            end,
+                        })
+                    end
+
+                    -- The following code creates a keymap to toggle inlay hints in your
+                    -- code, if the language server you are using supports them
+                    --
+                    -- This may be unwanted, since they displace some of your code
+                    if client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_inlayHint, event.buf) then
+                        map('<leader>th', function()
+                            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
+                        end, '[T]oggle Inlay [H]ints')
+                    end
+                end,
+            })
             require('mason-lspconfig').setup {
                 ensure_installed = vim.tbl_keys(servers),
                 hanlders = {
                     function(server_name)
                         require('lspconfig')[server_name].setup {
                             capabilities = capabilities,
-                            on_attach = on_attach,
                             settings = servers[server_name],
                             filetypes = (servers[server_name] or {}).filetypes,
                         }
