@@ -277,4 +277,33 @@ return {
             require 'window-picker'.setup()
         end,
     },
+    {
+        "ThePrimeagen/refactoring.nvim",
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "nvim-treesitter/nvim-treesitter",
+        },
+        lazy = false,
+        opts = {},
+        keys = {
+            {
+                "<leader>rx",
+                mode = { "x" },
+                ":Refactor extract ",
+                desc = "[R]efactor E[x]tract",
+            },
+            {
+                "<leader>rxv",
+                mode = { "x" },
+                ":Refactor extract_var ",
+                desc = "[R]efactor E[x]tract [V]ariable",
+            },
+            {
+                "<leader>ri",
+                mode = { "n", "x" },
+                ":Refactor inline_func",
+                desc = "[R]efactor [I]nline function",
+            },
+        },
+    },
 }
