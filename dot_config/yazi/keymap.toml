@@ -1,7 +1,7 @@
 [[manager.prepend_keymap]]
 on   = [ "s" ]
-run  = "plugin keyjump"
-desc = "Keyjump (Normal mode)"
+run  = "plugin searchjump -- autocd"
+desc = "Searchjump (Normal mode)"
 
 [[manager.prepend_keymap]]
 on   = [ "<ENTER>" ]
