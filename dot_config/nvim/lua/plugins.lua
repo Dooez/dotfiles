@@ -71,10 +71,10 @@ return {
         },
         keys = {
             {
-                "<leader>q",
+                "<leader>Q",
                 "<cmd>Trouble diagnostics focus=true<cr>",
                 desc = "Diagnostics"
-            }
+            }            
         }
     },
     { -- filesystem explorer

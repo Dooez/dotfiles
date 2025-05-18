@@ -84,6 +84,7 @@ vim.keymap.set('n', '<C-h>', '<C-w>h', { desc = 'Go to the left window' })
 vim.keymap.set('n', '<C-j>', '<C-w>j', { desc = 'Go to the down window' })
 vim.keymap.set('n', '<C-k>', '<C-w>k', { desc = 'Go to the up window' })
 vim.keymap.set('n', '<C-l>', '<C-w>l', { desc = 'Go to the right window' })
+vim.keymap.set('n', '<leader>q', vim.diagnostic.open_float, { desc = 'Show diagnostics' })
 
 vim.keymap.set('i', 'jj', '<Esc>')
 
@@ -96,4 +97,3 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   group = highlight_group,
   pattern = '*'
 })
-
