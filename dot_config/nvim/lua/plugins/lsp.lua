@@ -60,11 +60,20 @@ return {
                 lineFoldingOnly = true
             }
 
-            local signs = { Error = "󰅚 ", Warn = "󰀪 ", Hint = "󰌶 ", Info = " " }
-            for type, icon in pairs(signs) do
-                local hl = "DiagnosticSign" .. type
-                vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
-            end
+            vim.diagnostic.config {
+                severity_sort = true,
+                float = { border = 'none', source = 'if_many' },
+                underline = { severity = vim.diagnostic.severity.ERROR },
+                signs = {
+                    text = {
+                        [vim.diagnostic.severity.ERROR] = '󰅚 ',
+                        [vim.diagnostic.severity.WARN] = '󰀪 ',
+                        [vim.diagnostic.severity.INFO] = '󰋽 ',
+                        [vim.diagnostic.severity.HINT] = '󰌶 ',
+                    },
+                },
+                virtual_text = false,
+            }
 
             -- Floating window for renaming
             local rename_win

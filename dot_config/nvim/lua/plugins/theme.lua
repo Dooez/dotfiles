@@ -81,6 +81,7 @@ return {
                     ['@keyword.doxygen'] = { fg = colors.subtext0 },
 
                     ['IlluminatedWordText'] = { bg = colors.surface0 },
+                    DapStopped = {fg = colors.green}
                 }
             end,
             integrations = {
