@@ -74,7 +74,7 @@ return {
                 "<leader>Q",
                 "<cmd>Trouble diagnostics focus=true<cr>",
                 desc = "Diagnostics"
-            }            
+            }
         }
     },
     { -- filesystem explorer
@@ -164,7 +164,10 @@ return {
     { -- context folds at the top of the buffer
         'nvim-treesitter/nvim-treesitter-context',
         opts = {
-            mulitiline_threshold = 1,
+            multiwindow = true,
+            max_lines = 5,
+            min_window_height = 30,
+            multiline_threshold = 1,
         },
         config = true,
     },

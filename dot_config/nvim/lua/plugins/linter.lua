@@ -2,6 +2,7 @@ return {
     {
         "mfussenegger/nvim-lint",
         event = "VeryLazy",
+        enabled = false,
         dependencies = {
             'williamboman/mason.nvim',
         },
@@ -32,6 +33,7 @@ return {
     },
     {
         "rshkarin/mason-nvim-lint",
+        enabled = false,
         dependencies = {
             "mfussenegger/nvim-lint",
         },

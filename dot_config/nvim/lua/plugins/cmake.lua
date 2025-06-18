@@ -1,8 +1,11 @@
 return {
     'Civitasv/cmake-tools.nvim',
+    -- commit = 'd6fa30479c5f392f6f80b4b2e542f91155b289a8',
     dependencies = {
         "nvim-lua/plenary.nvim",
         'mfussenegger/nvim-dap',
+        'stevearc/overseer.nvim',
+        'akinsho/toggleterm.nvim',
     },
     config = function()
         require("cmake-tools").setup {
@@ -30,14 +33,17 @@ return {
                 runInTerminal = true,
                 console = "integratedTerminal",
             },
-            cmake_executor = {     -- executor to use
-                name = "quickfix", -- name of the executor
+            cmake_executor = {                       -- executor to use
+                name = "quickfix",                   -- name of the executor
                 opts = {
-                    auto_close_when_success = false,
-                },         -- the options the executor will get, possible values depend on the executor type. See `default_opts` for possible values.
+                    auto_close_when_success = false, -- typically, you can use it with the "always" option; it will auto-close the quickfix buffer if the execution is successful.
+                }
             },
-            cmake_terminal = {
-                name = "terminal",
+            cmake_runner = {
+                name = "quickfix",
+                opts = {
+                    auto_close_when_success = false, -- typically, you can use it with the "always" option; it will auto-close the quickfix buffer if the execution is successful.
+                }
             },
             cmake_notifications = {
                 enabled = true, -- show cmake execution progress in nvim-notify
