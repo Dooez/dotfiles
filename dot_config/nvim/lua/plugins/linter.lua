@@ -1,6 +1,7 @@
 return {
     {
         "mfussenegger/nvim-lint",
+        enabled = false,
         event = "VeryLazy",
         enabled = false,
         dependencies = {
