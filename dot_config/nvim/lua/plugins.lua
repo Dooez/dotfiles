@@ -8,6 +8,28 @@ return {
         }
 
     },
+    {
+        'echasnovski/mini.nvim',
+        dependencies = {
+            'nvim-treesitter/nvim-treesitter',
+        },
+        version = false,
+        config = function()
+            require 'mini.ai'.setup({})
+            require 'mini.pairs'.setup({})
+            local qdtiming = require 'mini.animate'.gen_timing.quadratic({
+                duration = 150,
+                unit = 'total',
+            })
+            require 'mini.animate'.setup({
+                cursor = { timing = qdtiming },
+                scroll = { timing = qdtiming },
+                resize = { enable = false },
+                open = { enable = false },
+                close = { enable = false },
+            })
+        end,
+    },
     'tpope/vim-sleuth', -- automatic indent detection
     {                   -- show pending keybinds
         'folke/which-key.nvim',
@@ -108,36 +130,14 @@ return {
 
     },
 
-
     -- editing and navigtaion
-    {
-        'echasnovski/mini.ai',
-        version = '*'
-    },
     {
         'numToStr/Comment.nvim',
         config = true,
     },
     {
-        'windwp/nvim-autopairs',
-        event = "InsertEnter",
-        dependencies = {
-            'hrsh7th/nvim-cmp',
-        },
-        config = function()
-            require 'nvim-autopairs'.setup({
-                enable_check_bracket_line = false,
-            })
-            local cmp_autopairs = require('nvim-autopairs.completion.cmp')
-            local cmp = require('cmp')
-            cmp.event:on(
-                'confirm_done',
-                cmp_autopairs.on_confirm_done()
-            )
-        end,
-    },
-    {
         "kylechui/nvim-surround",
+        enabled = true,
         event = "VeryLazy",
         config = true,
     },
@@ -159,27 +159,22 @@ return {
         },
     },
 
-
     -- visual
     { -- context folds at the top of the buffer
         'nvim-treesitter/nvim-treesitter-context',
         opts = {
-            multiwindow = true,
-            max_lines = 5,
-            min_window_height = 30,
-            multiline_threshold = 1,
+            mulitiline_threshold = 1,
         },
         config = true,
     },
     { -- folds
-        'kevinhwang91/nvim-ufo',
+        'kevinhwang1/nvim-ufo',
         dependencies = {
-            'kevinhwang91/promise-async'
+            'kevinhwang1/promise-async'
         },
         opts = {},
     },
-
-    'RRethy/vim-illuminate', -- highlight word under the cursor
+    { 'RRethy/vim-illuminate' }, -- highlight word under the cursor
     {
         "lukas-reineke/indent-blankline.nvim",
         main = "ibl",
@@ -194,36 +189,11 @@ return {
             },
         }
     },
-    { -- scrolling animation
-        'echasnovski/mini.animate',
-        version = false,
-        config = function()
-            local animate = require('mini.animate')
-            local qdtiming = require('mini.animate').gen_timing.quadratic(
-                {
-                    duration = 150,
-                    unit = 'total',
-                }
-            )
-            animate.setup({
-                cursor = {
-                    timing = qdtiming
-                },
-                scroll = {
-                    timing = qdtiming
-                },
-                resize = { enable = false },
-                open = { enable = false },
-                close = { enable = false },
-            })
-        end,
-    },
     {
         'jedrzejboczar/nvim-dap-cortex-debug',
         dependencies = {
             'mfussenegger/nvim-dap'
         },
-        -- commit = "6056de8f90736e62e318537e4415eab351487611",
         config = function()
             require('dap-cortex-debug').setup {
                 debug = false, -- log debug messages
@@ -306,6 +276,37 @@ return {
                 mode = { "n", "x" },
                 ":Refactor inline_func",
                 desc = "[R]efactor [I]nline function",
+            },
+        },
+    },
+    {
+        'isakbm/gitgraph.nvim',
+        opts = {
+            git_cmd = "git",
+            symbols = {
+                merge_commit = 'M',
+                commit = '*',
+            },
+            format = {
+                timestamp = '%H:%M %d-%m-%y',
+                fields = { 'hash', 'timestamp', 'author', 'branch_name', 'tag' },
+            },
+            hooks = {
+                on_select_commit = function(commit)
+                    print('selected commit:', commit.hash)
+                end,
+                on_select_range_commit = function(from, to)
+                    print('selected range:', from.hash, to.hash)
+                end,
+            },
+        },
+        keys = {
+            {
+                "<leader>gL",
+                function()
+                    require('gitgraph').draw({}, { all = true, max_count = 5000 })
+                end,
+                desc = "GitGraph - Draw",
             },
         },
     },

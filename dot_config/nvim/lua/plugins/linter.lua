@@ -1,9 +1,8 @@
 return {
     {
         "mfussenegger/nvim-lint",
-        enabled = false,
+        -- enabled = false,
         event = "VeryLazy",
-        enabled = false,
         dependencies = {
             'williamboman/mason.nvim',
         },
@@ -12,7 +11,7 @@ return {
 
             lint.linters_by_ft = {
                 lua = { "luacheck" },
-                cpp = { "clangtidy" },
+                -- cpp = { "clangtidy" },
             }
 
             local function debounce(ms, fn)
@@ -34,7 +33,7 @@ return {
     },
     {
         "rshkarin/mason-nvim-lint",
-        enabled = false,
+        -- enabled = false,
         dependencies = {
             "mfussenegger/nvim-lint",
         },
